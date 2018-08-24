@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Sets;
 import com.ppmall.common.Const;
 import com.ppmall.common.ServerResponse;
 import com.ppmall.dao.CategoryMapper;
@@ -68,14 +67,14 @@ public class CategoryServiceImpl implements ICategoryService {
 
 	@Override
 	public ServerResponse getCategoryAndChildren(int categoryId) {
-		Set<Category> categorySet = Sets.newHashSet();
+		Set<Category> categorySet = new HashSet<>();
 		findChildCategory(categorySet, categoryId);
 		return ServerResponse.createSuccess(categorySet);
 	}
 
 	@Override
 	public ServerResponse getCategoryParent(int categoryId) {
-		Set<Category> categorySet = Sets.newHashSet();
+		Set<Category> categorySet = new HashSet<>();
 		findParentCategory(categorySet, categoryId);
 		// Set<String> returnSet = Sets.newHashSet();
 

@@ -1,11 +1,7 @@
 package com.ppmall.tools;
 
-import com.github.pagehelper.PageInfo;
-import com.ppmall.common.ServerResponse;
 import com.ppmall.dao.ProductMapper;
 import com.ppmall.pojo.Product;
-import com.ppmall.service.IProductService;
-import com.ppmall.service.impl.ProductServiceImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
