@@ -19,8 +19,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		// TODO Auto-generated method stub
-		registry.addResourceHandler("/backend/**").addResourceLocations("E:\\project\\ppmall-v\\backend");
-		registry.addResourceHandler("/dist/**").addResourceLocations("E:\\project\\ppmall-v\\backenddist");
+		registry.addResourceHandler("/backend/**").addResourceLocations("E:\\project\\ppmall-v\\backend\\");
+		registry.addResourceHandler("/dist/**").addResourceLocations("E:\\project\\ppmall-v\\backenddist\\");
 		WebMvcConfigurer.super.addResourceHandlers(registry);
 	}
 
