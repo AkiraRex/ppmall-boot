@@ -19,21 +19,21 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		// TODO Auto-generated method stub
-		registry.addResourceHandler("/backend/**").addResourceLocations("E:\\project\\ppmall-v\\backend\\");
-		registry.addResourceHandler("/dist/**").addResourceLocations("E:\\project\\ppmall-v\\backenddist\\");
+		registry.addResourceHandler("/backend/**").addResourceLocations("file:E:\\project\\ppmall-v\\backend");
+		registry.addResourceHandler("/dist/**").addResourceLocations("file:E:\\project\\ppmall-v\\dist");
 		WebMvcConfigurer.super.addResourceHandlers(registry);
 	}
 
-	@Override
-	public void configurePathMatch(PathMatchConfigurer configurer) {
-		configurer.setUseRegisteredSuffixPatternMatch(true);
-	}
-
-	@Bean
-	public ServletRegistrationBean<DispatcherServlet> servletRegistrationBean(DispatcherServlet dispatcherServlet) {
-		ServletRegistrationBean<DispatcherServlet> servletServletRegistrationBean = new ServletRegistrationBean<>(
-				dispatcherServlet);
-		servletServletRegistrationBean.addUrlMappings("*.do");
-		return servletServletRegistrationBean;
-	}
+//	@Override
+//	public void configurePathMatch(PathMatchConfigurer configurer) {
+//		configurer.setUseRegisteredSuffixPatternMatch(true);
+//	}
+//
+//	@Bean
+//	public ServletRegistrationBean<DispatcherServlet> servletRegistrationBean(DispatcherServlet dispatcherServlet) {
+//		ServletRegistrationBean<DispatcherServlet> servletServletRegistrationBean = new ServletRegistrationBean<>(
+//				dispatcherServlet);
+//		servletServletRegistrationBean.addUrlMappings("*.do");
+//		return servletServletRegistrationBean;
+//	}
 }
