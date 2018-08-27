@@ -27,61 +27,31 @@ import com.ppmall.util.DateUtil;
 public class ActivityServiceImpl implements IActivityService, InitializingBean {
 	private static ConcurrentLinkedQueue<Product> queue = new ConcurrentLinkedQueue<>();// 队列
 
-	@Autowired
-	ActivityThreadService tpm;
-
-	@Autowired
-	private ActivityMapper activityMapper;
-
-	@Autowired
-	private ActivityThread dealSeckillThread;
-
-	@Autowired
-	private ISecKillMessageProducer iSecKillMessageProducer;
-
-	@Autowired
-	RedisUtil redisUtil;
+//	@Autowired
+//	ActivityThreadService tpm;
+//
+//	@Autowired
+//	private ActivityMapper activityMapper;
+//
+//	@Autowired
+//	private ActivityThread dealSeckillThread;
+//
+//	@Autowired
+//	private ISecKillMessageProducer iSecKillMessageProducer;
+//
+//	@Autowired
+//	RedisUtil redisUtil;
 
 	@Override
 	public synchronized ServerResponse createOrder(ActivityMessage message) {
-		// TODO Auto-generated method stub
-		int count = Integer.valueOf(redisUtil.get("count").toString());
-		if (count > 0) {
-			// 线程池处理方式(线程池原理类似于消息队列,自带一个队列)
 
-			tpm.processOrders(message);
-
-			// 普通多线程方式处理队列
-			Product product = new Product();
-			product.setId(count);
-			queue.offer(product);
-
-			// rabbitmq消息队列(生产者),消费者在com.ppmall.rabbitmq.listener.SecKillQueueListener.onMessage()
-			// iSecKillMessageProducer.sendMessage("testExchange",
-			// "SecKillQueue", productId);
-			redisUtil.decr("count", 1);
-			return ServerResponse.createSuccessMessage("抢购成功");
-		}
 		return ServerResponse.createSuccessMessage("抢购失败");
 	}
 
 	@Override
 	public ServerResponse listAllKillActivities(Date beginTime, Date endTime) {
 		// TODO Auto-generated method stub
-		if (beginTime == null) {
-			beginTime = DateUtil.getDate();
-		}
-
-		if (endTime == null) {
-			long weekMilis = 1000 * 60 * 60 * 24 * 7; // 7日内抢购活动
-			endTime = DateUtil.getDate(beginTime.getTime() + weekMilis);
-		}
-
-		Map paramMap = new HashMap<>();
-		paramMap.put("beginTime", beginTime);
-		paramMap.put("endTime", endTime);
-		List<Activity> killList = activityMapper.selectByActivityDuration(paramMap);
-		return ServerResponse.createSuccess("获取成功", killList);
+		return ServerResponse.createSuccess("获取成功");
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package com.ppmall.redis;
+package com.ppmall.config;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
+import com.ppmall.redis.StringRedisSerializer;
 
 
 @Configuration
