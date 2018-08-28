@@ -19,13 +19,19 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
-		
-		<!-- springboot热启动  -->
+
+		<!-- 监控bean -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<!-- springboot热启动 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
-		
+
 		<!-- mybatis启动器 -->
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
@@ -58,6 +64,7 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
 		<!-- jackson json工具 -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -70,6 +77,10 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-joda</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-parameter-names</artifactId>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.alipay.sdk/alipay-sdk-java -->
