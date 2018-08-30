@@ -1,10 +1,6 @@
 package com.ppmall.config;
 
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.DispatcherServlet;
-import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -19,21 +15,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		// TODO Auto-generated method stub
-		registry.addResourceHandler("/backend/**").addResourceLocations("file:E:\\project\\ppmall-v\\backend");
-		registry.addResourceHandler("/dist/**").addResourceLocations("file:E:\\project\\ppmall-v\\dist");
+		registry.addResourceHandler("/backend/**").addResourceLocations("classpath:/static/backend/dist");
+		registry.addResourceHandler("/dist/**").addResourceLocations("classpath:/static/dist");
 		WebMvcConfigurer.super.addResourceHandlers(registry);
 	}
-
-//	@Override
-//	public void configurePathMatch(PathMatchConfigurer configurer) {
-//		configurer.setUseRegisteredSuffixPatternMatch(true);
-//	}
-//
-//	@Bean
-//	public ServletRegistrationBean<DispatcherServlet> servletRegistrationBean(DispatcherServlet dispatcherServlet) {
-//		ServletRegistrationBean<DispatcherServlet> servletServletRegistrationBean = new ServletRegistrationBean<>(
-//				dispatcherServlet);
-//		servletServletRegistrationBean.addUrlMappings("*.do");
-//		return servletServletRegistrationBean;
-//	}
 }
