@@ -1,11 +1,17 @@
 package com.ppmall.service.impl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.ppmall.service.IIndexService;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.slf4j.Logger;
 import com.ppmall.aop.annotation.AccessConclusion;
 import com.ppmall.common.Const;
 import com.ppmall.common.ServerResponse;
@@ -14,25 +20,29 @@ import com.ppmall.dao.CategoryMapper;
 import com.ppmall.dao.ProductMapper;
 import com.ppmall.pojo.Advert;
 import com.ppmall.pojo.Category;
+import com.ppmall.service.IIndexService;
 import com.ppmall.util.PropertiesUtil;
 import com.ppmall.vo.HotProductVo;
 
 @Service("iIndexService")
 public class IIndexServiceImpl implements IIndexService {
 
-    @Autowired
-    private ProductMapper productMapper;
+	@Autowired
+	private ProductMapper productMapper;
 
-    @Autowired
-    private CategoryMapper categoryMapper;
+	@Autowired
+	private CategoryMapper categoryMapper;
 
-    @Autowired
-    private AdvertMapper advertMapper;
+	@Autowired
+	private AdvertMapper advertMapper;
+
+	private Logger logger = LoggerFactory.getLogger(IIndexService.class);
 
     @AccessConclusion
     @Override
     public ServerResponse getIndexData() {
         // TODO Auto-generated method stub
+    	logger.info("---------------------getIndexData-------------------------");
         List<HotProductVo> hotProductList = productMapper.selectHotProduct(3);
         List categoryProductList = new ArrayList<>();
         Set categorySet = new HashSet<>();

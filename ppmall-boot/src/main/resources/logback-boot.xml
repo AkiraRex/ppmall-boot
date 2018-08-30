@@ -3,7 +3,6 @@
     <property name="LOG_HOME" value="/home/data" />
     
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-        <encoding>UTF-8</encoding>
         <encoder>
             <pattern>[%d{HH:mm:ss.SSS}][%p][%c{40}][%t] %m%n</pattern>
         </encoder>
@@ -17,7 +16,6 @@
         <File>${LOG_HOME}/logs/ppmall.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_HOME}/logs/ppmall.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
-            <append>true</append>
             <maxHistory>10</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -32,7 +30,6 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_HOME}/logs/error.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
             <!--<fileNamePattern>d:/ppmalllog/error.log.%d{yyyy-MM-dd}.gz</fileNamePattern>-->
-            <append>true</append>
             <maxHistory>10</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -56,9 +53,9 @@
 
     <logger name="com.ppmall.dao" level="DEBUG"/>
     
-    <logger name="org.springframework.amqp.rabbit.listener.BlockingQueueConsumer" level="WARN" />  
-    <logger name="org.springframework.core.task.SimpleAsyncTaskExecutor" level="WARN" />     
-
+    <!-- <logger name="org.springframework.amqp.rabbit.listener.BlockingQueueConsumer" level="WARN" />   -->
+    <!-- <logger name="org.springframework.core.task.SimpleAsyncTaskExecutor" level="WARN" />     
+ -->
     <!--<logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" level="DEBUG" >-->
         <!--<appender-ref ref="console"/>-->
     <!--</logger>-->
@@ -75,7 +72,7 @@
     <!--</logger>-->
 
 
-    <root level="DEBUG">
+    <root level="INFO">
         <appender-ref ref="console"/>
         <appender-ref ref="error"/>
     </root>

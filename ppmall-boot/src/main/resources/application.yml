@@ -43,18 +43,19 @@ mybatis:
   mapper-locations: classpath:mappers/*.xml
   #type-aliases-package: com.winter.model
 
-#pagehelper分页插件
+# pagehelper分页插件
 pagehelper:
     helperDialect: mysql
     reasonable: true
     supportMethodsArguments: true
     params: count=countSql
     
- # actuator
+# actuator
 management: 
   endpoints: 
     web: 
       exposure: 
         include: "*"
-      
-      
+# logback
+logging: 
+  config: classpath:logback-boot.xml
