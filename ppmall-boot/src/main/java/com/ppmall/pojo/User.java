@@ -2,7 +2,7 @@ package com.ppmall.pojo;
 
 import java.util.Date;
 
-public class User {
+public class User implements UserDetails {
     private Integer id;
 
     private String username;

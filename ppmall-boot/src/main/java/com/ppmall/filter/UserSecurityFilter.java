@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@WebFilter(filterName = "userSecurityFilter", urlPatterns = "*.do" )
+//@WebFilter(filterName = "userSecurityFilter", urlPatterns = "*.do" )
 public class UserSecurityFilter implements Filter {
 
 	private IUserService iUserService;
