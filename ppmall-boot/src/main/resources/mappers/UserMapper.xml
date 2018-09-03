@@ -25,6 +25,12 @@
         from mmall_user
         where id = #{id,jdbcType=INTEGER}
     </select>
+    <select id="selectByUsername" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from mmall_user
+        where username = #{username,jdbcType=INTEGER}
+    </select>
     <select id="selectByWechatOpenId" resultMap="BaseResultMap" parameterType="java.lang.String">
         select
         <include refid="Base_Column_List"/>

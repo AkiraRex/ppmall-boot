@@ -27,8 +27,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 @Service("iUserService")
-public class UserServiceImpl implements IUserService {
+public class UserServiceImpl implements IUserService, UserDetailsService  {
 	@Autowired
 	private UserMapper userMapper;
 	
@@ -244,5 +248,14 @@ public class UserServiceImpl implements IUserService {
 		}
 
 		return ServerResponse.createErrorMessage("登陆失败");
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		// TODO Auto-generated method stub
+		User user = userMapper.selectByUsername(username);
+		if(user == null)
+			user =  new User();
+		return user;
 	}
 }

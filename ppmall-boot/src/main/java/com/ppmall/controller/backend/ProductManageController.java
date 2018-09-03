@@ -1,10 +1,7 @@
 package com.ppmall.controller.backend;
 
-import com.ppmall.common.Const;
-import com.ppmall.common.ResponseCode;
 import com.ppmall.common.ServerResponse;
 import com.ppmall.pojo.Product;
-import com.ppmall.pojo.User;
 import com.ppmall.service.IFileService;
 import com.ppmall.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;

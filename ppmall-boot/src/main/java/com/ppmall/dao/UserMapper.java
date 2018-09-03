@@ -17,7 +17,9 @@ public interface UserMapper {
     int updateByPrimaryKey(User record);
 
     User loginByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
-
+    
+    User selectByUsername(String username);
+    
     int selectCountByUsername(String username);
 
     int selectCountByPhone(String phone);
