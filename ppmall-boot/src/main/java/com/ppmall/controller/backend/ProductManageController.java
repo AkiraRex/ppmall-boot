@@ -30,7 +30,7 @@ public class ProductManageController {
 
     @RequestMapping(value = "/list.do", method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse<String> getProductList(HttpSession session, int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, Integer productId, String productName) {
+    public ServerResponse<String> getProductList(HttpSession session,@RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, Integer productId, String productName) {
         Map paramMap = new HashMap();
         paramMap.put("productName", productName);
         paramMap.put("productId", productId);

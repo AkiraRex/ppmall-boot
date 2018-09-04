@@ -9,9 +9,15 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ppmall.common.Const;
 
 public class User implements UserDetails {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1410229794166263351L;
+
 	private Integer id;
 
 	private String username;
@@ -141,6 +147,7 @@ public class User implements UserDetails {
 		this.updateTime = updateTime;
 	}
 
+	@JsonIgnore
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
@@ -151,25 +158,29 @@ public class User implements UserDetails {
 			authorities.add(new SimpleGrantedAuthority("ROLE_" + "普通用户"));
 		return authorities;
 	}
-
+	
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonExpired() {
 		// TODO Auto-generated method stub
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAccountNonLocked() {
 		// TODO Auto-generated method stub
 		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isCredentialsNonExpired() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub

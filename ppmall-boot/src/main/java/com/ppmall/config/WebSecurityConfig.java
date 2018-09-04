@@ -1,4 +1,4 @@
-package com.ppmall.security;
+package com.ppmall.config;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -19,9 +20,14 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.util.DigestUtils;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
+import com.ppmall.common.ServerResponse;
+import com.ppmall.pojo.User;
+import com.ppmall.security.UrlAccessDecisionManager;
+import com.ppmall.security.UrlFilterInvocationSecurityMetadataSource;
 import com.ppmall.service.impl.UserServiceImpl;
+import com.ppmall.util.MD5Util;
 
 @Configuration
 @EnableWebSecurity
@@ -29,13 +35,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	UserServiceImpl iUserService;
+	
+	@Autowired
+	UrlFilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource;
+	
+	@Autowired
+	UrlAccessDecisionManager urlAccessDecisionManager;
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(iUserService).passwordEncoder(new PasswordEncoder() {
 			@Override
 			public String encode(CharSequence charSequence) {
-				return DigestUtils.md5DigestAsHex(charSequence.toString().getBytes());
+				return MD5Util.MD5EncodeUtf8(charSequence.toString());
 			}
 
 			/**
@@ -47,33 +59,39 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			 */
 			@Override
 			public boolean matches(CharSequence charSequence, String s) {
-				String password = DigestUtils.md5DigestAsHex(charSequence.toString().getBytes()).toUpperCase();
-				return true;
+				String password = MD5Util.MD5EncodeUtf8(charSequence.toString()).toUpperCase();
+				return password.equals(s);
 			}
 		});
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().and()
-				.formLogin().loginPage("/error/not_login.do").loginProcessingUrl("/user/login_p.do")
-				.usernameParameter("username").passwordParameter("password").permitAll()
-				.failureHandler(new AuthenticationFailureHandler() {
+		http.authorizeRequests()
+				.withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+					@Override
+					public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+						o.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource);
+						o.setAccessDecisionManager(urlAccessDecisionManager);
+						return o;
+					}
+				})
+				.and()
+				.formLogin().loginPage("/error/not_login.do")
+				.loginProcessingUrl("/manage/user/login.do").usernameParameter("username").passwordParameter("password")
+				.permitAll().failureHandler(new AuthenticationFailureHandler() {
 					@Override
 					public void onAuthenticationFailure(HttpServletRequest httpServletRequest,
 							HttpServletResponse httpServletResponse, AuthenticationException e)
 							throws IOException, ServletException {
 						httpServletResponse.setContentType("application/json;charset=utf-8");
 						PrintWriter out = httpServletResponse.getWriter();
-						StringBuffer sb = new StringBuffer();
-						sb.append("{\"status\":\"error\",\"msg\":\"");
 
-						sb.append("用户名或密码输入错误，登录失败!");
-
-						sb.append("\"}");
-						out.write(sb.toString());
+						ServerResponse<String> response = ServerResponse.createErrorMessage("登陆失败:" + e.getMessage());
+						out.write(response.toString());
 						out.flush();
 						out.close();
+						e.printStackTrace();
 					}
 				}).successHandler(new AuthenticationSuccessHandler() {
 					@Override
@@ -83,13 +101,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						httpServletResponse.setContentType("application/json;charset=utf-8");
 						PrintWriter out = httpServletResponse.getWriter();
 
-						String s = "{\"status\":\"success\",\"msg\":\"成功\"}";
-						out.write(s);
+						User user = (User) authentication.getPrincipal();
+						ServerResponse<User> response = ServerResponse.createSuccess(user);
+
+						out.write(response.toString());
 						out.flush();
 						out.close();
 					}
 				}).and().logout().permitAll().and().csrf().disable().exceptionHandling();
-				
+
 	}
 
 	@Override
