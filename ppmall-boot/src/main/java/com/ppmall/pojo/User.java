@@ -153,9 +153,9 @@ public class User implements UserDetails {
 		// TODO Auto-generated method stub
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		if (role == Const.Role.ROLE_ADMIN) 
-			authorities.add(new SimpleGrantedAuthority("ROLE_" + "超级管理员"));
+			authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
 		else
-			authorities.add(new SimpleGrantedAuthority("ROLE_" + "普通用户"));
+			authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 		return authorities;
 	}
 	

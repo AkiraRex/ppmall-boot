@@ -9,38 +9,41 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 import com.ppmall.common.ServerResponse;
 import com.ppmall.pojo.User;
+import com.ppmall.security.AuthenticationAccessDeniedHandler;
 import com.ppmall.security.UrlAccessDecisionManager;
 import com.ppmall.security.UrlFilterInvocationSecurityMetadataSource;
 import com.ppmall.service.impl.UserServiceImpl;
 import com.ppmall.util.MD5Util;
 
+@Order(1)
 @Configuration
-@EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
-	UserServiceImpl iUserService;
+	private UserServiceImpl iUserService;
 	
 	@Autowired
-	UrlFilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource;
+	private UrlFilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource;
 	
 	@Autowired
-	UrlAccessDecisionManager urlAccessDecisionManager;
+	private UrlAccessDecisionManager urlAccessDecisionManager;
+	
+	@Autowired
+	private AuthenticationAccessDeniedHandler accessDeniedHandler;
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -79,6 +82,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
 				.formLogin().loginPage("/error/not_login.do")
 				.loginProcessingUrl("/manage/user/login.do").usernameParameter("username").passwordParameter("password")
+				.and().formLogin().loginPage("/error/not_login.do")
+				.loginProcessingUrl("/user/login.do").usernameParameter("username").passwordParameter("password")
 				.permitAll().failureHandler(new AuthenticationFailureHandler() {
 					@Override
 					public void onAuthenticationFailure(HttpServletRequest httpServletRequest,
@@ -108,12 +113,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						out.flush();
 						out.close();
 					}
-				}).and().logout().permitAll().and().csrf().disable().exceptionHandling();
+				}).and().logout().permitAll().and().csrf().disable().exceptionHandling().accessDeniedHandler(accessDeniedHandler);
 
 	}
 
-	@Override
-	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/reg");
-	}
 }

@@ -8,6 +8,14 @@ import java.util.List;
 
 
 public interface IUserService {
+	
+	@Deprecated
+	/**
+	 * 登陆已交由Spring Security处理。
+	 * @param username
+	 * @param password
+	 * @return
+	 */
     ServerResponse<User> login(String username, String password);
     
     ServerResponse wechatLogin(String code, String encryptedData, String iv);

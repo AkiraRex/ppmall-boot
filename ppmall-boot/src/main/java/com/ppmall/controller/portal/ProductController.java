@@ -3,6 +3,7 @@ package com.ppmall.controller.portal;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.ppmall.common.Const;
@@ -30,7 +31,6 @@ public class ProductController {
 	public ServerResponse getProductList(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
 			@RequestParam(value = "pageSize", defaultValue = "10") int pageSize, Integer categoryId, String keyword,
 			String orderBy, HttpSession session) {
-
 		Map paramMap = new HashMap<>();
 		paramMap.put("categoryId", categoryId);
 		paramMap.put("keyword", keyword);
@@ -44,7 +44,7 @@ public class ProductController {
 
 	@RequestMapping(value = "/detail.do", method = RequestMethod.GET)
 	@ResponseBody
-	public ServerResponse<String> getDetail(HttpSession session, int productId) {
+	public ServerResponse getDetail(HttpSession session, int productId, HttpServletResponse httpServletResponse) {
 		ServerResponse response = iProductService.getDetailById(productId);
 		ProductVo product = (ProductVo) response.getData();
 		if (product != null)

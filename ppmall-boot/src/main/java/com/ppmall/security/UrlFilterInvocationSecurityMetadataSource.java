@@ -16,26 +16,24 @@ public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocati
 	public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		String requestUrl = ((FilterInvocation) object).getRequestUrl();
-        if (requestUrl.contains("login")) {
+		if (requestUrl.contains("/manage/")) {
+        	return SecurityConfig.createList("ROLE_ADMIN");
+		}
+		
+        if (requestUrl.contains("login")||requestUrl.contains("register.do")
+        		|| requestUrl.contains("alipay_callback.do")
+        		|| requestUrl.contains("check_valid.do")
+        		|| requestUrl.contains("product/list.do")
+        		|| requestUrl.contains("product/detail.do")
+        		|| requestUrl.contains("category/")) {
             return null;
         }
-        if (requestUrl.contains("/manage/")) {
-        	return SecurityConfig.createList("ROLE_超级管理员");
+        if (requestUrl.equals("")) {
+			
 		}
-//        List<Menu> allMenu = menuService.getAllMenu();
-//        for (Menu menu : allMenu) {
-//            if (antPathMatcher.match(menu.getUrl(), requestUrl)&&menu.getRoles().size()>0) {
-//                List<Role> roles = menu.getRoles();
-//                int size = roles.size();
-//                String[] values = new String[size];
-//                for (int i = 0; i < size; i++) {
-//                    values[i] = roles.get(i).getName();
-//                }
-//                return SecurityConfig.createList(values);
-//            }
-//        }
+        
         //没有匹配上的资源，都是登录访问
-        return SecurityConfig.createList("ROLE_普通用户");
+        return SecurityConfig.createList("ROLE_USER");
 	}
 
 	@Override
@@ -47,7 +45,7 @@ public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocati
 	@Override
 	public boolean supports(Class<?> clazz) {
 		// TODO Auto-generated method stub
-		return false;
+		 return FilterInvocation.class.isAssignableFrom(clazz);
 	}
 
 }

@@ -32,6 +32,7 @@ public class UserController {
     @Autowired
     private IUserService iUserService;
 
+    @Deprecated
     @RequestMapping(value = "/login.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<User> login(String username, String password, HttpSession session) {
@@ -109,7 +110,7 @@ public class UserController {
         return response;
     }
 
-    @RequestMapping(value = "check_valid.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/check_valid.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> checkValid(String str) {
 
@@ -117,14 +118,14 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "get_information.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/get_information.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<User> getInformation(HttpSession session) {
 
         return getUserInfo(session);
     }
 
-    @RequestMapping(value = "update_information.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/update_information.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> updateInformation(User user, HttpSession session) {
         User currentUser = (User) session.getAttribute(Const.CURRENT_USER);

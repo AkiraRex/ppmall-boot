@@ -23,6 +23,14 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+/**
+ * 2018-09-05 弃用，权限管理全面交由Spring Security处理。
+ * 具体在
+ * com.ppmall.config.WebSecurityConfig
+ * @author rex
+ *
+ */
+@Deprecated
 //@WebFilter(filterName = "userSecurityFilter", urlPatterns = "*.do" )
 public class UserSecurityFilter implements Filter {
 
