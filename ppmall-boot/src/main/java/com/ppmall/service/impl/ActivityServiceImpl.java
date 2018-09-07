@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.ppmall.redis.RedisUtil;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +20,7 @@ import com.ppmall.rabbitmq.message.ActivityMessage;
 import com.ppmall.rabbitmq.producer.ISecKillMessageProducer;
 import com.ppmall.service.IActivityService;
 import com.ppmall.util.DateUtil;
+import com.ppmall.util.RedisUtil;
 
 @Service
 public class ActivityServiceImpl implements IActivityService, InitializingBean {

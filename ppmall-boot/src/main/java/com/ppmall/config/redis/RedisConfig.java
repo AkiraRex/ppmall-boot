@@ -1,4 +1,4 @@
-package com.ppmall.config;
+package com.ppmall.config.redis;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;

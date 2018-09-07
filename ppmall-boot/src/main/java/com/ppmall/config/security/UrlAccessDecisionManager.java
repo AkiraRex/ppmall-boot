@@ -1,4 +1,4 @@
-package com.ppmall.security;
+package com.ppmall.config.security;
 
 import java.util.Collection;
 import java.util.Iterator;

@@ -1,4 +1,4 @@
-package com.ppmall.config;
+package com.ppmall.config.mvc;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

@@ -11,8 +11,8 @@ import com.ppmall.common.Const;
 import com.ppmall.common.ServerResponse;
 import com.ppmall.pojo.User;
 import com.ppmall.rabbitmq.message.ActivityMessage;
-import com.ppmall.redis.RedisUtil;
 import com.ppmall.service.IActivityService;
+import com.ppmall.util.RedisUtil;
 
 @Controller
 @RequestMapping("/activity")

@@ -18,9 +18,9 @@ import com.ppmall.common.Const;
 import com.ppmall.common.ServerResponse;
 import com.ppmall.dao.CategoryMapper;
 import com.ppmall.pojo.Category;
-import com.ppmall.redis.RedisUtil;
 import com.ppmall.service.ICategoryService;
 import com.ppmall.util.PropertiesUtil;
+import com.ppmall.util.RedisUtil;
 
 @Service("iCategoryService")
 public class CategoryServiceImpl implements ICategoryService {

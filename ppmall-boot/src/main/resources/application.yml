@@ -59,4 +59,5 @@ management:
 # logback
 logging: 
   config: classpath:logback-boot.xml
-
+logging.level.org.springframework.security: DEBUG
+security.oauth2.resource.filter-order: 99

@@ -1,4 +1,4 @@
-package com.ppmall.config;
+package com.ppmall.config.security;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -7,9 +7,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.aspectj.weaver.ast.And;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,19 +20,20 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-
-import com.ppmall.common.ServerResponse;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import com.ppmall.pojo.User;
-import com.ppmall.security.AuthenticationAccessDeniedHandler;
-import com.ppmall.security.UrlAccessDecisionManager;
-import com.ppmall.security.UrlFilterInvocationSecurityMetadataSource;
+
+import com.ppmall.common.Const;
+import com.ppmall.common.ServerResponse;
 import com.ppmall.service.impl.UserServiceImpl;
 import com.ppmall.util.MD5Util;
 
-@Order(1)
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -46,8 +50,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private AuthenticationAccessDeniedHandler accessDeniedHandler;
 
 	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(iUserService).passwordEncoder(new PasswordEncoder() {
+	@Bean
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
+
+	@Bean
+    PasswordEncoder passwordEncoder(){
+        return new PasswordEncoder() {
+			
 			@Override
 			public String encode(CharSequence charSequence) {
 				return MD5Util.MD5EncodeUtf8(charSequence.toString());
@@ -65,7 +76,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				String password = MD5Util.MD5EncodeUtf8(charSequence.toString()).toUpperCase();
 				return password.equals(s);
 			}
-		});
+		};
+    }
+    
+//    String finalPassword = "{bcrypt}"+new BCryptPasswordEncoder().encode("123456");
+//    String finalSecret = "{bcrypt}"+new BCryptPasswordEncoder().encode("123456");
+	 
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+
+		auth.userDetailsService(iUserService).passwordEncoder(passwordEncoder());
 	}
 
 	@Override
@@ -104,16 +124,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 							HttpServletResponse httpServletResponse, Authentication authentication)
 							throws IOException, ServletException {
 						httpServletResponse.setContentType("application/json;charset=utf-8");
-						PrintWriter out = httpServletResponse.getWriter();
-
 						User user = (User) authentication.getPrincipal();
+						httpServletRequest.getSession().setAttribute(Const.CURRENT_USER	, user);
+						PrintWriter out = httpServletResponse.getWriter();
+						
 						ServerResponse<User> response = ServerResponse.createSuccess(user);
 
 						out.write(response.toString());
 						out.flush();
 						out.close();
 					}
-				}).and().logout().permitAll().and().csrf().disable().exceptionHandling().accessDeniedHandler(accessDeniedHandler);
+				}).and().logout().permitAll()
+				  .and().csrf().disable().exceptionHandling().accessDeniedHandler(accessDeniedHandler);
+	
 
 	}
 

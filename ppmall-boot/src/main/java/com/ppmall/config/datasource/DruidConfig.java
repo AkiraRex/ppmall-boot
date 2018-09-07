@@ -1,4 +1,4 @@
-package com.ppmall.config;
+package com.ppmall.config.datasource;
 
 import java.util.Arrays;
 import java.util.HashMap;
