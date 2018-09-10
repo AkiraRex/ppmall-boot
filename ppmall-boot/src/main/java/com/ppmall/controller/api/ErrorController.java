@@ -18,4 +18,12 @@ public class ErrorController {
 		return ServerResponse.createErrorStatus(ResponseCode.NOT_LOGIN.getCode(), ResponseCode.NOT_LOGIN.getDesc());
 
 	}
+	
+	@RequestMapping("/notAuth")
+	@ResponseBody
+	public ServerResponse notAuth() {
+
+		return ServerResponse.createErrorStatus(20, "权限不足");
+
+	}
 }

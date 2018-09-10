@@ -5,14 +5,14 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.core.GrantedAuthority;
+//import org.springframework.security.core.authority.SimpleGrantedAuthority;
+//import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ppmall.common.Const;
 
-public class User implements UserDetails {
+public class User {
 	/**
 	 * 
 	 */
@@ -147,43 +147,43 @@ public class User implements UserDetails {
 		this.updateTime = updateTime;
 	}
 
-	@JsonIgnore
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		List<GrantedAuthority> authorities = new ArrayList<>();
-		if (role == Const.Role.ROLE_ADMIN) 
-			authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-		else
-			authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-		return authorities;
-	}
-	
-	@JsonIgnore
-	@Override
-	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@JsonIgnore
-	@Override
-	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@JsonIgnore
-	@Override
-	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return true;
-	}
-
-	@JsonIgnore
-	@Override
-	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return true;
-	}
+//	@JsonIgnore
+//	@Override
+//	public Collection<? extends GrantedAuthority> getAuthorities() {
+//		// TODO Auto-generated method stub
+//		List<GrantedAuthority> authorities = new ArrayList<>();
+//		if (role == Const.Role.ROLE_ADMIN) 
+//			authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+//		else
+//			authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+//		return authorities;
+//	}
+//	
+//	@JsonIgnore
+//	@Override
+//	public boolean isAccountNonExpired() {
+//		// TODO Auto-generated method stub
+//		return true;
+//	}
+//
+//	@JsonIgnore
+//	@Override
+//	public boolean isAccountNonLocked() {
+//		// TODO Auto-generated method stub
+//		return true;
+//	}
+//
+//	@JsonIgnore
+//	@Override
+//	public boolean isCredentialsNonExpired() {
+//		// TODO Auto-generated method stub
+//		return true;
+//	}
+//
+//	@JsonIgnore
+//	@Override
+//	public boolean isEnabled() {
+//		// TODO Auto-generated method stub
+//		return true;
+//	}
 }

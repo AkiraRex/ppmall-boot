@@ -32,11 +32,11 @@ public class UserController {
     @Autowired
     private IUserService iUserService;
 
-    @Deprecated
+
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<User> login(String username, String password, HttpSession session) {
-        ServerResponse response = iUserService.login(username, password);
+        ServerResponse response = iUserService.shiroLogin(username, password);
         if (response.isSuccess())
             session.setAttribute(Const.CURRENT_USER, response.getData());
         return response;

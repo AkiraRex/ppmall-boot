@@ -15,7 +15,7 @@ import com.ppmall.common.ResponseCode;
 import com.ppmall.common.ServerResponse;
 import com.ppmall.pojo.User;
 import com.ppmall.service.ICartService;
-
+import org.apache.shiro.authz.annotation.RequiresRoles;
 @Controller
 @RequestMapping("/cart")
 public class CartController {
@@ -23,6 +23,7 @@ public class CartController {
 	@Autowired
 	private ICartService iCartService;
 
+	@RequiresRoles("ROLE_USERS")
 	@RequestMapping(value = "/getCartProductCount", method = RequestMethod.GET)
 	@ResponseBody
 	public ServerResponse<Integer> getCartCount(HttpSession session) {

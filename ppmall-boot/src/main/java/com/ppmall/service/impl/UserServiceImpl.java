@@ -27,15 +27,20 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+//import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.core.userdetails.UserDetailsService;
+//import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
+
 
 @Service("iUserService")
-public class UserServiceImpl implements IUserService, UserDetailsService  {
+public class UserServiceImpl implements IUserService {
 	@Autowired
 	private UserMapper userMapper;
-	
+
 	@Autowired
 	private AuthMapper authMapper;
 
@@ -48,6 +53,24 @@ public class UserServiceImpl implements IUserService, UserDetailsService  {
 		// todo 密碼MD5
 		return ServerResponse.createSuccess("登陆成功", user);
 
+	}
+
+	@Override
+	public ServerResponse shiroLogin(String username, String password) {
+		// TODO Auto-generated method stub
+		Subject subject = SecurityUtils.getSubject();
+		password = MD5Util.MD5EncodeUtf8(password);
+		
+		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+		try {
+			subject.login(token);
+		} catch (AuthenticationException e) {
+			token.clear();
+			e.printStackTrace();
+			return ServerResponse.createErrorMessage("登录失败，用户名或密码错误！");
+		}
+		User user = (User) subject.getPrincipal();
+		return ServerResponse.createSuccess("登陆成功", user);
 	}
 
 	@Override
@@ -184,10 +207,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService  {
 		String appid = PropertiesUtil.getProperty("wechat.login.appid");
 		String secret = PropertiesUtil.getProperty("wechat.login.secret");
 		String param = // opa3b4mhz8FavLLS_zsIEsxe2l68
-				"?grant_type=" + grant_type 
-				+ "&appid=" + appid 
-				+ "&secret=" + secret 
-				+ "&js_code=" + code;
+				"?grant_type=" + grant_type + "&appid=" + appid + "&secret=" + secret + "&js_code=" + code;
 		Map resultMap = JsonUtil.jsonStringToObject(HttpUtil.httpsGet(url + param), HashMap.class);
 		String openid = (String) resultMap.get("openid");
 		if (openid != null) {
@@ -196,17 +216,17 @@ public class UserServiceImpl implements IUserService, UserDetailsService  {
 			Auth auth = null;
 			Date now = new Date();
 			if (user == null) {
-				try {					
+				try {
 					byte contentByte[] = AesUtil.decrypt(Base64.decodeBase64(encryptedData),
 							Base64.decodeBase64((String) resultMap.get("session_key")), Base64.decodeBase64(iv));
 					contentString = new String(contentByte, "UTF-8");
-					
+
 					int end = contentString.indexOf("watermark") - 1;
 					contentString = contentString.substring(0, end) + "\"createTime\":\"" + now.getTime() + "\","
-																	+ "\"updateTime\":\"" + now.getTime() + "\"}";
-																	//+ "\"openid\":\"" + openid + "\"}";
+							+ "\"updateTime\":\"" + now.getTime() + "\"}";
+					// + "\"openid\":\"" + openid + "\"}";
 					auth = JsonUtil.jsonStringToObject(contentString, Auth.class);
-					
+
 					user = new User();
 					user.setWechatOpenid(openid);
 					user.setUsername(UUIDUtil.getUUID().substring(0, 11));
@@ -214,11 +234,10 @@ public class UserServiceImpl implements IUserService, UserDetailsService  {
 					user.setRole(Const.Role.ROLE_CUSTOMER);
 					user.setCreateTime(now);
 					user.setUpdateTime(now);
-					
-					
+
 					userMapper.insert(user);
-					authMapper.insert(auth);	
-					
+					authMapper.insert(auth);
+
 				} catch (InvalidAlgorithmParameterException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -231,31 +250,43 @@ public class UserServiceImpl implements IUserService, UserDetailsService  {
 			} else {
 				auth = authMapper.selectByOpenId(openid);
 			}
-			
+
 			Map claims = new HashMap<>();
 			claims.put(Const.CURRENT_USER, user);
- 			String accessToken = TokenUtil.createToken(claims, String.valueOf(user.getId()), new Date().getTime() + Const.ExpiredType.ONE_HOUR * 2 );
- 			claims.clear();
- 			String refreshToken = TokenUtil.createToken(claims, String.valueOf(user.getId()), new Date().getTime() + Const.ExpiredType.ONE_MONTH);
-			
+			String accessToken = TokenUtil.createToken(claims, String.valueOf(user.getId()),
+					new Date().getTime() + Const.ExpiredType.ONE_HOUR * 2);
+			claims.clear();
+			String refreshToken = TokenUtil.createToken(claims, String.valueOf(user.getId()),
+					new Date().getTime() + Const.ExpiredType.ONE_MONTH);
+
 			Map returnMap = new HashMap<>();
 			returnMap.put("user", user);
-			returnMap.put("auth",auth);
+			returnMap.put("auth", auth);
 			returnMap.put("accessToken", accessToken);
 			returnMap.put("refreshToken", refreshToken);
-			
+
 			return ServerResponse.createSuccess("登陆成功", returnMap);
 		}
 
 		return ServerResponse.createErrorMessage("登陆失败");
 	}
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public ServerResponse loadUserByUsername(String username) {
 		// TODO Auto-generated method stub
 		User user = userMapper.selectByUsername(username);
-		if(user == null)
-			user =  new User();
-		return user;
+		if (user == null)
+			user = new User();
+		return ServerResponse.createSuccess(user);
 	}
+	// @Override
+	// @Deprecated
+	// public UserDetails loadUserByUsername(String username) throws
+	// UsernameNotFoundException {
+	// // TODO Auto-generated method stub
+	// User user = userMapper.selectByUsername(username);
+	// if(user == null)
+	// user = new User();
+	// return user;
+	// }
+
 }
