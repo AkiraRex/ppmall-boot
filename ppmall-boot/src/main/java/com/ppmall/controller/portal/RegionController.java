@@ -15,7 +15,7 @@ import com.ppmall.service.IRegionService;
 public class RegionController {
 	@Autowired IRegionService iRegionService;
 	
-	@RequestMapping(value = "/list.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
 	public ServerResponse list(@RequestParam(value = "parentId", defaultValue = "1") int parentId) {
 		return iRegionService.getRegionList(parentId);

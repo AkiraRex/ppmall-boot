@@ -14,7 +14,7 @@ import com.ppmall.service.IIndexService;
 public class IndexController {
 	@Autowired IIndexService iIndexService;
 
-	@RequestMapping(value = "/list.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
 	public ServerResponse list() {
 		return iIndexService.getIndexData();

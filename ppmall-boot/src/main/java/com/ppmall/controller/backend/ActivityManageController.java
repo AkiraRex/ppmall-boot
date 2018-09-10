@@ -12,7 +12,7 @@ import com.ppmall.common.ServerResponse;
 @Controller
 @RequestMapping("/manage/activity" )
 public class ActivityManageController {
-	@RequestMapping(value = "/save.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public ServerResponse saveActivity() {
 		return null;
 	}

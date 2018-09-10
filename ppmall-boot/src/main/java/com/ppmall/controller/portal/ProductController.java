@@ -26,7 +26,7 @@ public class ProductController {
 	@Autowired
 	private IProductService iProductService;
 
-	@RequestMapping(value = "/list.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
 	public ServerResponse getProductList(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
 			@RequestParam(value = "pageSize", defaultValue = "10") int pageSize, Integer categoryId, String keyword,
@@ -42,7 +42,7 @@ public class ProductController {
 		return iProductService.getProductListPortal(pageNum, pageSize, paramMap);
 	}
 
-	@RequestMapping(value = "/detail.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/detail", method = RequestMethod.GET)
 	@ResponseBody
 	public ServerResponse getDetail(HttpSession session, int productId, HttpServletResponse httpServletResponse) {
 		ServerResponse response = iProductService.getDetailById(productId);

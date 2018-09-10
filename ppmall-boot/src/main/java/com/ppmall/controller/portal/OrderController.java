@@ -33,7 +33,7 @@ public class OrderController {
 	@Autowired
 	IOrderService iOrderService;
 
-	@RequestMapping(value = "/get_order_cart_product.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/getOrderCartProduct", method = RequestMethod.GET)
 	@ResponseBody
 	public ServerResponse getOrderCartList(HttpSession session) {
 		User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
@@ -41,7 +41,7 @@ public class OrderController {
 		return iOrderService.getOrderCart(userId);
 	}
 
-	@RequestMapping(value = "/create.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	@ResponseBody
 	public ServerResponse createOrder(int shippingId, HttpSession session) {
 		User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
@@ -54,7 +54,7 @@ public class OrderController {
 		}
 	}
 
-	@RequestMapping(value = "/list.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
 	public ServerResponse getOrderList(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
 			@RequestParam(value = "pageSize", defaultValue = "10") int pageSize, HttpSession session) {
@@ -62,19 +62,19 @@ public class OrderController {
 		return iOrderService.getOrderList(currentUser.getId(), pageNum, pageSize);
 	}
 
-	@RequestMapping(value = "/detail.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/detail", method = RequestMethod.GET)
 	@ResponseBody
 	public ServerResponse getOrderDetail(Long orderNo, HttpSession session) {
 		return iOrderService.getOrderDetail(orderNo);
 	}
 	
-	@RequestMapping(value = "/cancel.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/cancel", method = RequestMethod.POST)
 	@ResponseBody
 	public ServerResponse cancelOrder(Long orderNo) {
 		return iOrderService.cancelOrder(orderNo);
 	}
 	
-	@RequestMapping(value = "/pay.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/pay", method = RequestMethod.GET)
 	@ResponseBody
 	public ServerResponse pay(Long orderNo,HttpSession session)  {
 		String path = session.getServletContext().getRealPath("upload");
@@ -91,7 +91,7 @@ public class OrderController {
 		return response;
 	}
 	
-	@RequestMapping(value = "/alipay_callback.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/alipayCallback", method = RequestMethod.POST)
 	@ResponseBody
 	public Object alipayCallback(HttpSession session,HttpServletRequest request)  {
         System.out.println("---------------------alipayCallback------------------------------");
@@ -124,7 +124,7 @@ public class OrderController {
 			return Const.AliPayReponse.ERROR;
 	}
 	
-	@RequestMapping("query_order_pay_status.do")
+	@RequestMapping("queryOrderPayStatus")
     @ResponseBody
     public ServerResponse<Boolean> queryOrderPayStatus(HttpSession session, Long orderNo){
         ServerResponse serverResponse = iOrderService.queryOrderPayStatus(orderNo);

@@ -23,7 +23,7 @@ public class ActivityController {
 	@Autowired
 	private RedisUtil redisUtil;
 	
-	@RequestMapping(value = "/create_order.do")
+	@RequestMapping(value = "/createOrder")
 	@ResponseBody
 	public ServerResponse createOrder(int activityId,int shippingId,HttpSession session) {
 		

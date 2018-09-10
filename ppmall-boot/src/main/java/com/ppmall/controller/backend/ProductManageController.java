@@ -28,7 +28,7 @@ public class ProductManageController {
     @Autowired
     private IFileService iFileService;
 
-    @RequestMapping(value = "/list.do", method = RequestMethod.GET)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<String> getProductList(HttpSession session,@RequestParam(value = "pageNum", defaultValue = "1") int pageNum, @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, Integer productId, String productName) {
         Map paramMap = new HashMap();
@@ -38,19 +38,19 @@ public class ProductManageController {
 
     }
 
-    @RequestMapping(value = "/save.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> saveProduct(HttpSession session, Product product) {
         return iProductService.saveProduct(product);
     }
 
-    @RequestMapping(value = "/detail.do", method = RequestMethod.GET)
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<String> getDetail(HttpSession session, int productId) {
         return iProductService.getDetailById(productId);
     }
 
-    @RequestMapping(value = "/upload.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> uploadFile(HttpSession session, @RequestParam(value = "upload_file", required = false) MultipartFile file, HttpServletRequest request) {
         String path = session.getServletContext().getRealPath("upload");
@@ -63,7 +63,7 @@ public class ProductManageController {
 
     }
 
-    @RequestMapping(value = "/set_sale_status", method = RequestMethod.POST)
+    @RequestMapping(value = "/setSaleStatus", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse setProductStatus(Product product, HttpSession session) {
         return iProductService.setStatus(product);

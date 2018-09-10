@@ -20,7 +20,7 @@ public class CategoryController {
 	@Autowired
 	private ICategoryService iCategoryService;
 
-	@RequestMapping(value = "/get_all_category.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/getAllCategory", method = RequestMethod.GET)
 	@ResponseBody
 	public ServerResponse getAllCategoryList(HttpSession session) {
 		return iCategoryService.getAllCategoryList();
@@ -32,13 +32,13 @@ public class CategoryController {
 	 * @param parentId
 	 * @return
 	 */
-	@RequestMapping(value = "/get_category.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/getCategory", method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<List> getCategory(HttpSession session, @RequestParam(value = "parentId", defaultValue = "0") int parentId) {
         return iCategoryService.getCategory(parentId);
     }
 	
-	@RequestMapping(value = "/get_category_detail.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/getCategoryDetail", method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse<List> getCategoryDetail(HttpSession session, @RequestParam(value = "id", defaultValue = "0") int id) {
         return iCategoryService.getCategoryDetail(id);

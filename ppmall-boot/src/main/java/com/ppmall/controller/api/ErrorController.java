@@ -11,7 +11,7 @@ import com.ppmall.common.ServerResponse;
 @RequestMapping("/error")
 public class ErrorController {
 
-	@RequestMapping("/not_login.do")
+	@RequestMapping("/notLogin")
 	@ResponseBody
 	public ServerResponse notLogin() {
 

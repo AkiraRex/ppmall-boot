@@ -33,7 +33,7 @@ public class UserController {
     private IUserService iUserService;
 
     @Deprecated
-    @RequestMapping(value = "/login.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<User> login(String username, String password, HttpSession session) {
         ServerResponse response = iUserService.login(username, password);
@@ -42,21 +42,21 @@ public class UserController {
         return response;
     }
 
-    @RequestMapping(value = "/logout.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<User> logout(HttpSession session) {
         session.removeAttribute(Const.CURRENT_USER);
         return ServerResponse.createSuccessMessage("登出成功");
     }
 
-    @RequestMapping(value = "/register.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> register(String username, String password, String email, String phone, String question, String answer) {
         ServerResponse<String> response = iUserService.register(username, password, email, phone, question, answer, 0);
         return response;
     }
 
-    @RequestMapping(value = "/get_user_info.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/get_user_info", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<User> getUserInfo(HttpSession session) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
@@ -65,13 +65,13 @@ public class UserController {
         return ServerResponse.createErrorStatus(ResponseCode.NOT_LOGIN.getCode(), ResponseCode.NOT_LOGIN.getDesc());
     }
 
-    @RequestMapping(value = "/forget_get_question.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/forget_get_question", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> getPassQuestion(String username) {
         return iUserService.getPassQuestion(username);
     }
 
-    @RequestMapping(value = "/forget_check_answer.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/forgetCheckAnswer", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> checkAnswer(User user, HttpSession session) {
 
@@ -84,7 +84,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/forget_reset_password", method = RequestMethod.POST)
+    @RequestMapping(value = "/forgetResetPassword", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> forgetPassword(User user, String forgetToken, HttpSession session) {
         String forgetTokenS = session.getAttribute(Const.FORGET_TOKEN).toString();
@@ -95,7 +95,7 @@ public class UserController {
         return ServerResponse.createErrorStatus(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
     }
 
-    @RequestMapping(value = "/update_password.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> forgetPassword(String passwordOld, String passwordNew, HttpSession session) {
         User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
@@ -110,7 +110,7 @@ public class UserController {
         return response;
     }
 
-    @RequestMapping(value = "/check_valid.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/checkValid", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> checkValid(String str) {
 
@@ -118,14 +118,14 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/get_information.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/getInformation", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<User> getInformation(HttpSession session) {
 
         return getUserInfo(session);
     }
 
-    @RequestMapping(value = "/update_information.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/updateInformation", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> updateInformation(User user, HttpSession session) {
         User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
