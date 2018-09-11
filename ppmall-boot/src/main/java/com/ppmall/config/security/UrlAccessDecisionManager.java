@@ -20,7 +20,8 @@ import org.springframework.stereotype.Component;
  * @author rex
  *
  */
-@Component
+//@Component
+@Deprecated
 public class UrlAccessDecisionManager implements AccessDecisionManager {
 
 	@Override

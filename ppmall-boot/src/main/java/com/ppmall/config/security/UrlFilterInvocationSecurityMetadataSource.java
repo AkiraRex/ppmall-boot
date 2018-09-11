@@ -11,7 +11,8 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 
-@Component
+//@Component
+@Deprecated
 public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource{
 
 	private static Logger logger = LoggerFactory.getLogger(UrlFilterInvocationSecurityMetadataSource.class);

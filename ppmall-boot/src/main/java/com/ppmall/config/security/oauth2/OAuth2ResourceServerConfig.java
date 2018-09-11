@@ -19,8 +19,9 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationProcessingFilter ;
 
-@Configuration
-@EnableResourceServer
+//@Configuration
+//@EnableResourceServer
+@Deprecated
 public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	private static final String DEMO_RESOURCE_ID = "order";
 

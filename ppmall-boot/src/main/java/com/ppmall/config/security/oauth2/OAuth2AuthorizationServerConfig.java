@@ -25,8 +25,9 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import com.ppmall.service.impl.UserServiceImpl;
 import com.ppmall.util.MD5Util;
 
-@Configuration
-@EnableAuthorizationServer
+//@Configuration
+//@EnableAuthorizationServer
+@Deprecated
 public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 	private static final String DEMO_RESOURCE_ID = "order";
 

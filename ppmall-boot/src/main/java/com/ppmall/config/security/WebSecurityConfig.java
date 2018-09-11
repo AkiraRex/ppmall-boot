@@ -34,7 +34,8 @@ import com.ppmall.common.ServerResponse;
 import com.ppmall.service.impl.UserServiceImpl;
 import com.ppmall.util.MD5Util;
 
-@Configuration
+//@Configuration
+@Deprecated
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -85,7 +86,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
-		auth.userDetailsService(iUserService).passwordEncoder(passwordEncoder());
+//		auth.userDetailsService(iUserService).passwordEncoder(passwordEncoder());
 	}
 
 	@Override

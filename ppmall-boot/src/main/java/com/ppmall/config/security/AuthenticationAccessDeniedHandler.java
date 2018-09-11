@@ -15,7 +15,8 @@ import org.springframework.stereotype.Component;
 
 import com.ppmall.common.ServerResponse;
 
-@Component
+//@Component
+@Deprecated
 public class AuthenticationAccessDeniedHandler implements AccessDeniedHandler {
 
 	private static Logger logger = LoggerFactory.getLogger(AuthenticationAccessDeniedHandler.class);
