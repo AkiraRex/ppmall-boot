@@ -39,13 +39,13 @@ public class PasswordAccessTokenRetriever extends AbstractAccessTokenHandler {
         final String clientId = clientDetails.clientId();
 
         final String authenticationId = iAuthenticationIdGenerator.generate(clientId, username, scope);
-        AccessToken accessToken = iOAuthRepository.findAccessToken(clientId, username, authenticationId);
+        AccessToken accessToken = iOAuthCacheRepository.findAccessToken(clientId, username, authenticationId);
 
         boolean needCreated = needCreated(clientId, accessToken);
 
         if (needCreated) {
             accessToken = createAndSaveAccessToken(clientDetails, clientDetails.supportRefreshToken(), username, authenticationId);
-            LOG.debug("Create a new AccessToken: {}", accessToken);
+            LOG.info("Create a new AccessToken: {}", accessToken);
         }
 
         return accessToken;
@@ -59,7 +59,7 @@ public class PasswordAccessTokenRetriever extends AbstractAccessTokenHandler {
             LOG.debug("Not found AccessToken from repository, will create a new one, client_id: {}", clientId);
         } else if (accessToken.tokenExpired()) {
             LOG.debug("Delete expired AccessToken: {} and create a new one, client_id: {}", accessToken, clientId);
-            iOAuthRepository.deleteAccessToken(accessToken);
+            iOAuthCacheRepository.deleteAccessToken(accessToken);
             needCreate = true;
         } else {
             LOG.debug("Use existed AccessToken: {}, client_id: {}", accessToken, clientId);

@@ -1,20 +1,17 @@
 package com.oauth2.server.business.retriever.holder;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.oauth2.repository.IOAuthCacheRepository;
-import com.ppmall.pojo.User;
-
 import org.apache.oltu.oauth2.as.issuer.OAuthIssuer;
 import org.apache.shiro.SecurityUtils;
 
+import com.oauth2.repository.IOAuthCacheRepository;
+import com.oauth2.util.BeanUtil;
+import com.ppmall.pojo.User;
+
 public abstract class AbstractOAuthHolder {
 
-	@Autowired
-	protected IOAuthCacheRepository iOAuthRepository;
+	protected IOAuthCacheRepository iOAuthCacheRepository = BeanUtil.getBean(IOAuthCacheRepository.class);
 
-	@Autowired
-	protected OAuthIssuer oAuthIssuer;
+	protected OAuthIssuer oAuthIssuer = BeanUtil.getBean(OAuthIssuer.class);
 
 	/**
 	 * Return current login username

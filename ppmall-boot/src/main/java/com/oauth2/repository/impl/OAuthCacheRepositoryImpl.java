@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.oauth2.common.CacheKeyGenerator;
 import com.oauth2.common.CacheNames;
@@ -17,7 +18,7 @@ import com.oauth2.repository.AbstractCacheSupport;
 import com.oauth2.repository.IOAuthCacheRepository;
 import com.oauth2.repository.IOAuthRepository;
 
-@Component("iOAuthCacheRepository")
+@Repository("iOAuthCacheRepository")
 public class OAuthCacheRepositoryImpl extends AbstractCacheSupport implements IOAuthCacheRepository {
 
 	private static final Logger LOG = LoggerFactory.getLogger(OAuthCacheRepositoryImpl.class);

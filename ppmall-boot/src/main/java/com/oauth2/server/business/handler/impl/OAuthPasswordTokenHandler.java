@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import com.oauth2.domain.AccessToken;
 import com.oauth2.server.business.CustomOAuthTokenRequest;
 import com.oauth2.server.business.handler.AbstractOAuthTokenHandler;
-import com.oauth2.server.business.handler.OAuthTokenHandler;
 import com.oauth2.server.business.validator.AbstractClientDetailsValidator;
 import com.oauth2.server.business.validator.PasswordClientDetailsValidator;
 import com.oauth2.util.WebUtils;

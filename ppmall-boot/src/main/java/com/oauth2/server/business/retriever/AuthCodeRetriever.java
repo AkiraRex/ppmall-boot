@@ -22,11 +22,11 @@ public class AuthCodeRetriever extends AbstractOAuthHolder {
 		final String clientId = clientDetails.clientId();
 		final String username = currentUsername();
 
-		OauthCode oauthCode = iOAuthRepository.findOauthCodeByUsernameClientId(username, clientId);
+		OauthCode oauthCode = iOAuthCacheRepository.findOauthCodeByUsernameClientId(username, clientId);
 		if (oauthCode != null) {
 			// Always delete exist
 			LOG.debug("OauthCode ({}) is existed, remove it and create a new one", oauthCode);
-			iOAuthRepository.deleteOauthCode(oauthCode);
+			iOAuthCacheRepository.deleteOauthCode(oauthCode);
 		}
 		// create a new one
 		oauthCode = createOauthCode();
@@ -41,7 +41,7 @@ public class AuthCodeRetriever extends AbstractOAuthHolder {
 		final String username = currentUsername();
 		OauthCode oauthCode = new OauthCode().code(authCode).username(username).clientId(clientDetails.clientId());
 
-		iOAuthRepository.saveOauthCode(oauthCode);
+		iOAuthCacheRepository.saveOauthCode(oauthCode);
 		return oauthCode;
 	}
 

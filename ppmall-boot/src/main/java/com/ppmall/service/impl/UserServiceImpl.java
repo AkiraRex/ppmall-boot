@@ -59,7 +59,7 @@ public class UserServiceImpl implements IUserService {
 	public ServerResponse shiroLogin(String username, String password) {
 		// TODO Auto-generated method stub
 		Subject subject = SecurityUtils.getSubject();
-		password = MD5Util.MD5EncodeUtf8(password);
+//		password = MD5Util.MD5EncodeUtf8(password);
 		
 		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 		try {

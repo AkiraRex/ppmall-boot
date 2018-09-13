@@ -2,6 +2,7 @@ package com.ppmall.controller.portal;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,9 @@ public class CartController {
 	@RequiresRoles("ROLE_USERS")
 	@RequestMapping(value = "/getCartProductCount", method = RequestMethod.GET)
 	@ResponseBody
-	public ServerResponse<Integer> getCartCount(HttpSession session) {
+	public ServerResponse<Integer> getCartCount(HttpSession session, HttpServletRequest request) {
 		User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+		System.out.println("/getCartProductCount" + request.getUserPrincipal());
 		int userId = currentUser.getId();
 		return iCartService.getCartCount(userId);
 	}

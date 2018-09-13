@@ -30,10 +30,10 @@ public class AuthorizationCodeAccessTokenRetriever extends AbstractAccessTokenHa
 		final String clientId = clientDetails.clientId();
 		final String authenticationId = iAuthenticationIdGenerator.generate(clientId, username, null);
 
-		AccessToken accessToken = iOAuthRepository.findAccessToken(clientId, username, authenticationId);
+		AccessToken accessToken = iOAuthCacheRepository.findAccessToken(clientId, username, authenticationId);
 		if (accessToken != null) {
 			LOG.debug("Delete existed AccessToken: {}", accessToken);
-			iOAuthRepository.deleteAccessToken(accessToken);
+			iOAuthCacheRepository.deleteAccessToken(accessToken);
 		}
 		accessToken = createAndSaveAccessToken(clientDetails, clientDetails.supportRefreshToken(), username,
 				authenticationId);
@@ -44,6 +44,6 @@ public class AuthorizationCodeAccessTokenRetriever extends AbstractAccessTokenHa
 
 	private OauthCode loadOauthCode() {
 		final String clientId = clientDetails.clientId();
-		return iOAuthRepository.findOauthCode(code, clientId);
+		return iOAuthCacheRepository.findOauthCode(code, clientId);
 	}
 }

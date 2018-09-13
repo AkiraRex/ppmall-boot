@@ -34,11 +34,15 @@ public abstract class AbstractOauthTokenValidator extends AbstractClientDetailsV
 
 	// true is invalided
 	protected boolean invalidUsernamePassword() {
+		
 		final String username = tokenRequest.getUsername();
+		
 		final String password = tokenRequest.getPassword();
+		
 		try {
 			SecurityUtils.getSubject().login(new UsernamePasswordToken(username, password));
 		} catch (Exception e) {
+			e.printStackTrace();
 			LOG.debug("Login failed by username: " + username, e);
 			return true;
 		}

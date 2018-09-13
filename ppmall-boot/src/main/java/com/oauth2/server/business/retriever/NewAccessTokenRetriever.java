@@ -32,10 +32,10 @@ public class NewAccessTokenRetriever extends AbstractAccessTokenHandler {
 
 		final String authenticationId = iAuthenticationIdGenerator.generate(clientId, username, scopeAsText);
 
-		AccessToken accessToken = iOAuthRepository.findAccessToken(clientId, username, authenticationId);
+		AccessToken accessToken = iOAuthCacheRepository.findAccessToken(clientId, username, authenticationId);
 		if (accessToken != null) {
 			LOG.debug("Delete existed AccessToken: {}", accessToken);
-			iOAuthRepository.deleteAccessToken(accessToken);
+			iOAuthCacheRepository.deleteAccessToken(accessToken);
 		}
 		accessToken = createAndSaveAccessToken(clientDetails, false, username, authenticationId);
 		LOG.debug("Create a new AccessToken: {}", accessToken);

@@ -8,17 +8,16 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.oauth2.domain.AccessToken;
 import com.oauth2.domain.ClientDetails;
 import com.oauth2.server.business.service.IOAuthService;
+import com.oauth2.util.BeanUtil;
 
 public abstract class OAuthHandler {
 	private static final Logger LOG = LoggerFactory.getLogger(OAuthHandler.class);
 
-	@Autowired
-	protected IOAuthService iOAuthService;
+	protected IOAuthService iOAuthService = BeanUtil.getBean(IOAuthService.class);
 
 	private ClientDetails clientDetails;
 

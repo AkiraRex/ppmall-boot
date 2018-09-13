@@ -1,13 +1,14 @@
 package com.oauth2.repository.impl;
 
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.oauth2.domain.AccessToken;
 import com.oauth2.domain.ClientDetails;
 import com.oauth2.domain.OauthCode;
 import com.oauth2.repository.IOAuthRepository;
 
-@Component("iOAuthRepository")
+@Repository("iOAuthRepository")
 public class OAuthRepositoryImpl implements IOAuthRepository {
 
 	@Override
@@ -15,9 +16,11 @@ public class OAuthRepositoryImpl implements IOAuthRepository {
 		// TODO Auto-generated method stub
 		ClientDetails clientDetails = new ClientDetails();
 		clientDetails
-			.name("test")
-			.clientSecret("test")
-			.grantTypes("password");
+			.clientId("77ace8df917")
+			.name("password_client")
+			.clientSecret("c69368e339c40d")
+			.grantTypes("password refresh_token")
+			.scope("read");
 		return clientDetails;
 	}
 
