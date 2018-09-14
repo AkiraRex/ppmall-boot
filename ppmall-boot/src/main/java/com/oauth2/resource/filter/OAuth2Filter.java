@@ -46,7 +46,8 @@ public class OAuth2Filter extends AuthenticatingFilter {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-        final String accessToken = httpRequest.getParameter(OAuth.OAUTH_ACCESS_TOKEN);
+        final String accessToken = httpRequest.getHeader(OAuth.HeaderType.AUTHORIZATION);
+        // final String accessToken = httpRequest.getParameter(OAuth.OAUTH_ACCESS_TOKEN);
         final AccessToken token = iOAuthRSService.loadAccessTokenByTokenId(accessToken);
 
         String username = null;

@@ -71,9 +71,14 @@ public class BasicShiroRealm extends AuthorizingRealm {
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 
-		User user = (User) principals.getPrimaryPrincipal();
+		Object principal = principals.getPrimaryPrincipal();
+		
+		if (!(principal instanceof User)) {
+			principal = iUserService.loadUserByUsername(principal.toString()).getData();
+		}
+		
 		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-		int role = user.getRole();
+		int role = ((User) principal).getRole();
 		String roles = ""; 
 		switch (role) {
 		case Const.Role.ROLE_ADMIN:

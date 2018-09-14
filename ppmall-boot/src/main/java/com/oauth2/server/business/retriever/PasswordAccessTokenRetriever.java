@@ -11,11 +11,7 @@ import com.oauth2.domain.AccessToken;
 import com.oauth2.domain.ClientDetails;
 import com.oauth2.server.business.retriever.handler.AbstractAccessTokenHandler;
 
-/**
- * 2015/10/26
- *
- * @author Shengzhao Li
- */
+
 public class PasswordAccessTokenRetriever extends AbstractAccessTokenHandler {
 
 
