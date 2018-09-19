@@ -14,16 +14,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ppmall.common.Const;
 import com.ppmall.common.ResponseCode;
 import com.ppmall.common.ServerResponse;
+import com.ppmall.config.shiro.annotation.RequiredLogin;
 import com.ppmall.pojo.User;
 import com.ppmall.service.ICartService;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 @Controller
 @RequestMapping("/cart")
+@RequiredLogin
 public class CartController {
 
 	@Autowired
 	private ICartService iCartService;
 
+	
 	@RequiresRoles("ROLE_USERS")
 	@RequestMapping(value = "/getCartProductCount", method = RequestMethod.GET)
 	@ResponseBody

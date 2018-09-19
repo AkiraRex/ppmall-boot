@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ppmall.common.Const;
 import com.ppmall.common.ServerResponse;
+import com.ppmall.config.shiro.annotation.RequiredLogin;
 import com.ppmall.pojo.Shipping;
 import com.ppmall.pojo.User;
 import com.ppmall.service.IShippingService;
 
 @Controller
 @RequestMapping("/shipping")
+@RequiredLogin
 public class ShippingController {
 
 	@Autowired

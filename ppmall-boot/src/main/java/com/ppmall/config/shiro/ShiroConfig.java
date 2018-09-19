@@ -1,5 +1,6 @@
 package com.ppmall.config.shiro;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,40 +17,43 @@ import org.apache.shiro.authc.credential.SimpleCredentialsMatcher;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.realm.Realm;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.apache.shiro.realm.Realm;
 
 import com.oauth2.common.OAuth2CredentialsMatcher;
 import com.oauth2.factory.OAuth2SubjectFactory;
 import com.oauth2.resource.filter.OAuth2Filter;
+import com.ppmall.config.CustomShiroExceptionResolver;
+import com.ppmall.config.shiro.annotation.RequiredLogin;
 import com.ppmall.config.shiro.realm.BasicShiroRealm;
-import com.ppmall.config.shiro.realm.CustomShiroRealm;
 import com.ppmall.config.shiro.realm.RSRedisRealm;
+import com.ppmall.util.ClassUtil;
 @Configuration
 public class ShiroConfig {
 
+	private static Logger logger = LoggerFactory.getLogger(ShiroConfig.class);
+	
 	@Autowired
 	OAuth2Filter oAuth2Filter;
+	
+	private static String FILTER_SCAN_PACKAGE = "com.ppmall.controller";
 
 	/**
 	 * 自定义的Realm
 	 */
-	@Bean
-	public CustomShiroRealm customShiroRealm() {
-		CustomShiroRealm customShiroRealm = new CustomShiroRealm();
-		customShiroRealm.setCredentialsMatcher(credentialsMatcher());
-		return customShiroRealm;
-	}
 	
 	@Bean
 	public CredentialsMatcher authzCredentialsMatcher(){
@@ -131,7 +135,11 @@ public class ShiroConfig {
 
 		// 拦截器.
 		Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
-		filterChainDefinitionMap.put("/cart/**", "oauth");
+		List<Class<?>> clazzList = ClassUtil.getAllClassByPackageName(FILTER_SCAN_PACKAGE);
+		
+		// 根据注解匹配需要进行oAuth2Filter过滤的url
+		validAnnotation(clazzList, filterChainDefinitionMap);
+		
 		// 配置不会被拦截的链接 顺序判断
 
 		filterChainDefinitionMap.put("/user/login", "anon");
@@ -174,11 +182,11 @@ public class ShiroConfig {
 	 * 
 	 * @return
 	 */
-//	@Bean
-//	public HandlerExceptionResolver solver() {
-//		HandlerExceptionResolver handlerExceptionResolver = new CustomShiroExceptionResolver();
-//		return handlerExceptionResolver;
-//	}
+	@Bean
+	public HandlerExceptionResolver solver() {
+		HandlerExceptionResolver handlerExceptionResolver = new CustomShiroExceptionResolver();
+		return handlerExceptionResolver;
+	}
 	
 	/**
 	 * filter
@@ -193,5 +201,49 @@ public class ShiroConfig {
 		registration.setName("shiroFilter");
 		registration.setOrder(1);
 		return registration;
+	}
+	
+	private void validAnnotation(List<Class<?>> clsList, Map<String, String> filterChainDefinitionMap) {
+		
+		if (clsList != null && clsList.size() > 0) {
+			for (Class<?> cls : clsList) {
+				String clzValue = "";
+				RequestMapping requestMappingClz = (RequestMapping) cls.getAnnotation(RequestMapping.class);
+				RequiredLogin requiredLoginClz = (RequiredLogin) cls.getAnnotation(RequiredLogin.class);
+				
+				if (requestMappingClz != null) {
+					String values[] = requestMappingClz.value();
+					for (int i = 0; i < values.length; i++) {
+						clzValue += values[i];
+					}
+				}
+				if (requiredLoginClz != null) {
+					logger.info("mapping url: {} filter: {}", clzValue + "/**", "oauth");
+					filterChainDefinitionMap.put(clzValue + "/**", "oauth");
+					continue;
+				}
+				
+				// 获取类中的所有的方法
+				Method[] methods = cls.getDeclaredMethods();
+				if (methods != null && methods.length > 0) {
+					for (Method method : methods) {
+						
+						RequestMapping requestMapping = (RequestMapping) method.getAnnotation(RequestMapping.class);
+						RequiredLogin requiredLogin = (RequiredLogin) method.getAnnotation(RequiredLogin.class);
+						
+						if (requestMapping != null && (requiredLogin != null )) {
+							// 可以做权限验证
+							String  methodValues = clzValue;
+							String values[] = requestMapping.value();
+							for (int i = 0; i < values.length; i++) {
+								methodValues += values[i];
+								logger.info("mapping url: {} filter: {}", methodValues, "oauth");
+								filterChainDefinitionMap.put(methodValues, "oauth");
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }

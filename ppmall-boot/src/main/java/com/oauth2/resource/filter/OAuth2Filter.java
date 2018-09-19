@@ -1,7 +1,8 @@
 package com.oauth2.resource.filter;
+import java.io.PrintWriter;
+
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,13 +13,12 @@ import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.apache.oltu.oauth2.rs.response.OAuthRSResponse;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 import com.oauth2.domain.AccessToken;
 import com.oauth2.domain.OAuth2Token;
@@ -26,7 +26,9 @@ import com.oauth2.domain.UserDetails;
 import com.oauth2.resource.service.IOAuthRSService;
 import com.oauth2.util.WebUtils;
 import com.ppmall.common.Const;
-
+import com.ppmall.common.ResponseCode;
+import com.ppmall.common.ServerResponse;
+import com.ppmall.pojo.User;
 @Component
 public class OAuth2Filter extends AuthenticatingFilter {
 
@@ -46,7 +48,26 @@ public class OAuth2Filter extends AuthenticatingFilter {
     @Override
     protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) throws Exception {
 
+    	
         HttpServletRequest httpRequest = (HttpServletRequest) request;
+        
+        final String authType = httpRequest.getHeader("AuthType");
+    	
+        if (authType != null && authType.equals("session")) {
+        	User user = (User) httpRequest.getSession().getAttribute(Const.CURRENT_USER);
+            if (user != null) {
+    			return new UsernamePasswordToken(user.getUsername(), user.getPassword());
+    		}else {
+    			HttpServletResponse httpResponse = (HttpServletResponse)response;
+    			httpResponse.setContentType("application/json; charset=utf-8");
+    			httpResponse.setCharacterEncoding("UTF-8");
+    			
+				PrintWriter out = response.getWriter();
+				out.print(ServerResponse.createErrorStatus(ResponseCode.NOT_LOGIN.getCode(), "未登录").toString());
+				out.flush();
+				out.close();
+    		}
+		}
 
         final String accessToken = httpRequest.getHeader(OAuth.HeaderType.AUTHORIZATION);
         // final String accessToken = httpRequest.getParameter(OAuth.OAUTH_ACCESS_TOKEN);
@@ -56,8 +77,8 @@ public class OAuth2Filter extends AuthenticatingFilter {
         if (token != null) {
             username = token.username();
             // put the user to session 
-            UserDetails user = token.userObject();
-            httpRequest.getSession().setAttribute(Const.CURRENT_USER, user);
+            UserDetails userDetails = token.userObject();
+            httpRequest.getSession().setAttribute(Const.CURRENT_USER, userDetails);
             logger.debug("Set username[{}] and clientId[{}] to request that from AccessToken: {}", username, token.clientId(), token);
             httpRequest.setAttribute(OAuth.OAUTH_CLIENT_ID, token.clientId());
         } else {
@@ -108,10 +129,4 @@ public class OAuth2Filter extends AuthenticatingFilter {
     public void setRsService(IOAuthRSService iOAuthRSService) {
         this.iOAuthRSService = iOAuthRSService;
     }
-
-//    @Override
-//    public void afterPropertiesSet() throws Exception {
-//        Assert.notNull(resourceId, "resourceId is null");
-//        Assert.notNull(iOAuthRSService, "iOAuthRSService is null");
-//    }
 }

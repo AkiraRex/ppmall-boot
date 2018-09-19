@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.oauth2.domain.OAuth2Token;
+import org.apache.shiro.authc.UsernamePasswordToken;
 
 public class OAuth2CredentialsMatcher implements CredentialsMatcher {
 	private static final Logger LOG = LoggerFactory.getLogger(OAuth2CredentialsMatcher.class);
@@ -27,6 +28,10 @@ public class OAuth2CredentialsMatcher implements CredentialsMatcher {
 			LOG.debug("Call [resources] CredentialsMatcher: {}", resourcesCredentialsMatcher);
 			return resourcesCredentialsMatcher.doCredentialsMatch(token, info);
 		} else {
+			UsernamePasswordToken upToken = (UsernamePasswordToken) token;
+			if (upToken.getPassword().length == 32) {
+				return resourcesCredentialsMatcher.doCredentialsMatch(token, info);
+			}
 			LOG.debug("Call [authz] CredentialsMatcher: {}", authzCredentialsMatcher);
 			return authzCredentialsMatcher.doCredentialsMatch(token, info);
 		}

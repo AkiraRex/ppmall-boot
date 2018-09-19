@@ -24,6 +24,7 @@ import com.oauth2.domain.AccessToken;
 import com.oauth2.domain.ClientDetails;
 import com.oauth2.domain.OAuth2Token;
 import com.oauth2.resource.service.IOAuthRSService;
+import com.oauth2.server.business.service.IUserDetailsService;
 import com.ppmall.common.Const;
 import com.ppmall.pojo.User;
 import com.ppmall.service.IUserService;
@@ -33,7 +34,7 @@ public class CustomShiroRealm extends AuthorizingRealm {
 	private static final Logger logger = LoggerFactory.getLogger(CustomShiroRealm.class);
 
 	@Autowired
-	private IUserService iUserService;
+	private IUserDetailsService iUserService;
 	
 	@Autowired
     private IOAuthRSService iOAuthRSService;
@@ -73,66 +74,19 @@ public class CustomShiroRealm extends AuthorizingRealm {
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
 		// 获取用户账号
-//		String username = token.getPrincipal().toString();
-//
-//		User user = (User) iUserService.loadUserByUsername(username).getData();
-//
-//		String password = user.getPassword();
-//		
-//		if (password != null) {
-//			AuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(user, // 认证通过后，存放在session,一般存放user对象
-//					password, // 用户数据库中的密码
-//					getName()); // 返回Realm名
-//			return authenticationInfo;
-//		}
-//		return null;
+		String username = token.getPrincipal().toString();
+
+		User user = (User) iUserService.loadUserByUsername(username);
+
+		String password = user.getPassword();
 		
-		OAuth2Token upToken = (OAuth2Token) token;
-		final String accessToken = (String) upToken.getCredentials();
-
-		if (StringUtils.isEmpty(accessToken)) {
-			throw new OAuth2AuthenticationException("Invalid access_token: " + accessToken);
+		if (password != null) {
+			AuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(user, // 认证通过后，存放在session,一般存放user对象
+					password, // 用户数据库中的密码
+					getName()); // 返回Realm名
+			return authenticationInfo;
 		}
-		// Validate access token
-		AccessToken aToken = iOAuthRSService.loadAccessTokenByTokenId(accessToken);
-		validateToken(accessToken, aToken);
-
-		// Validate client details by resource-id
-		final ClientDetails clientDetails = iOAuthRSService.loadClientDetails(aToken.clientId(),
-				upToken.getResourceId());
-		validateClientDetails(accessToken, aToken, clientDetails);
-
-		String username = aToken.username();
-
-		// Null username is invalid
-		if (username == null) {
-			try {
-				throw new AccountException("Null usernames are not allowed by this realm.");
-			} catch (AccountException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		return new SimpleAuthenticationInfo(username, accessToken, getName());
+		return null;
+		
 	}
-
-	private void validateToken(String token, AccessToken accessToken) throws OAuth2AuthenticationException {
-		if (accessToken == null) {
-			logger.debug("Invalid access_token: {}, because it is null", token);
-			throw new OAuth2AuthenticationException("Invalid access_token: " + token);
-		}
-		if (accessToken.tokenExpired()) {
-			logger.debug("Invalid access_token: {}, because it is expired", token);
-			throw new OAuth2AuthenticationException("Invalid access_token: " + token);
-		}
-    }
-
-    private void validateClientDetails(String token, AccessToken accessToken, ClientDetails clientDetails) throws OAuth2AuthenticationException {
-        if (clientDetails == null || clientDetails.archived()) {
-            logger.debug("Invalid ClientDetails: {} by client_id: {}, it is null or archived", clientDetails, accessToken.clientId());
-            throw new OAuth2AuthenticationException("Invalid client by token: " + token);
-        }
-    }
-
 }

@@ -25,11 +25,13 @@ public abstract class WebUtils {
         final int responseStatus = oAuthResponse.getResponseStatus();
         try {
 
+
             final Map<String, String> headers = oAuthResponse.getHeaders();
             for (String key : headers.keySet()) {
                 response.addHeader(key, headers.get(key));
             }
             // CORS setting
+            
             response.setHeader("Access-Control-Allow-Origin", "*");
 
             response.setContentType(OAuth.ContentType.JSON);    //json
@@ -38,6 +40,7 @@ public abstract class WebUtils {
             final PrintWriter out = response.getWriter();
             out.print(oAuthResponse.getBody());
             out.flush();
+            out.close();
         } catch (IOException e) {
             throw new IllegalStateException("Write OAuthResponse error", e);
         }

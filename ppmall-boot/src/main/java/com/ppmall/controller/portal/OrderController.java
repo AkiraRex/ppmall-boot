@@ -25,10 +25,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.ppmall.common.Const;
 import com.ppmall.common.ServerResponse;
+import com.ppmall.config.shiro.annotation.RequiredLogin;
 import com.ppmall.pojo.User;
 
 @Controller
 @RequestMapping("/order")
+@RequiredLogin
 public class OrderController {
 	@Autowired
 	IOrderService iOrderService;

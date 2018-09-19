@@ -3,6 +3,7 @@ package com.ppmall.controller.portal;
 import com.ppmall.common.Const;
 import com.ppmall.common.ResponseCode;
 import com.ppmall.common.ServerResponse;
+import com.ppmall.config.shiro.annotation.RequiredLogin;
 import com.ppmall.pojo.User;
 import com.ppmall.service.IUserService;
 import com.ppmall.util.MD5Util;
@@ -56,8 +57,9 @@ public class UserController {
         return response;
     }
 
-    @RequestMapping(value = "/get_user_info", method = RequestMethod.POST)
+    @RequestMapping(value = "/getUserInfo", method = RequestMethod.POST)
     @ResponseBody
+    @RequiredLogin
     public ServerResponse<User> getUserInfo(HttpSession session) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user != null)
@@ -65,14 +67,16 @@ public class UserController {
         return ServerResponse.createErrorStatus(ResponseCode.NOT_LOGIN.getCode(), ResponseCode.NOT_LOGIN.getDesc());
     }
 
-    @RequestMapping(value = "/forget_get_question", method = RequestMethod.POST)
+    @RequestMapping(value = "/forgetGetQuestion", method = RequestMethod.POST)
     @ResponseBody
+    @RequiredLogin
     public ServerResponse<String> getPassQuestion(String username) {
         return iUserService.getPassQuestion(username);
     }
 
     @RequestMapping(value = "/forgetCheckAnswer", method = RequestMethod.POST)
     @ResponseBody
+    @RequiredLogin
     public ServerResponse<String> checkAnswer(User user, HttpSession session) {
 
         ServerResponse response = iUserService.checkAnswer(user);
@@ -86,6 +90,7 @@ public class UserController {
 
     @RequestMapping(value = "/forgetResetPassword", method = RequestMethod.POST)
     @ResponseBody
+    @RequiredLogin
     public ServerResponse<String> forgetPassword(User user, String forgetToken, HttpSession session) {
         String forgetTokenS = session.getAttribute(Const.FORGET_TOKEN).toString();
 
@@ -97,6 +102,7 @@ public class UserController {
 
     @RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
     @ResponseBody
+    @RequiredLogin
     public ServerResponse<String> forgetPassword(String passwordOld, String passwordNew, HttpSession session) {
         User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
 
@@ -120,6 +126,7 @@ public class UserController {
 
     @RequestMapping(value = "/getInformation", method = RequestMethod.POST)
     @ResponseBody
+    @RequiredLogin
     public ServerResponse<User> getInformation(HttpSession session) {
 
         return getUserInfo(session);
@@ -127,6 +134,7 @@ public class UserController {
 
     @RequestMapping(value = "/updateInformation", method = RequestMethod.POST)
     @ResponseBody
+    @RequiredLogin
     public ServerResponse<String> updateInformation(User user, HttpSession session) {
         User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
         user.setUsername(currentUser.getUsername());

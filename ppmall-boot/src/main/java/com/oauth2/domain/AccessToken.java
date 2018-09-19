@@ -178,6 +178,6 @@ public class AccessToken extends AbstractDomain {
 	 * @return New AccessToken instance
 	 */
 	public AccessToken cloneMe() {
-		return new AccessToken().username(username).clientId(clientId).tokenType(tokenType);
+		return new AccessToken().username(username).clientId(clientId).userObject(userObject).tokenType(tokenType);
 	}
 }

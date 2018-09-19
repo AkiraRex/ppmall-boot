@@ -39,6 +39,7 @@ public class BasicShiroRealm extends AuthorizingRealm {
 	@Override
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
 
+		System.out.println("111111111111111111111111111111111" + token.getClass());
 		String username = getUsername(token);
 
 		// Null username is invalid
