@@ -1,5 +1,7 @@
 package com.ppmall.service.impl;
 
+import com.oauth2.domain.UserDetails;
+import com.oauth2.server.business.service.IUserDetailsService;
 import com.ppmall.common.Const;
 import com.ppmall.common.ServerResponse;
 import com.ppmall.dao.AuthMapper;
@@ -37,7 +39,7 @@ import org.apache.shiro.subject.Subject;
 
 
 @Service("iUserService")
-public class UserServiceImpl implements IUserService {
+public class UserServiceImpl implements IUserService, IUserDetailsService {
 	@Autowired
 	private UserMapper userMapper;
 
@@ -271,12 +273,12 @@ public class UserServiceImpl implements IUserService {
 		return ServerResponse.createErrorMessage("登陆失败");
 	}
 
-	public ServerResponse loadUserByUsername(String username) {
+	public UserDetails loadUserByUsername(String username) {
 		// TODO Auto-generated method stub
 		User user = userMapper.selectByUsername(username);
 		if (user == null)
 			user = new User();
-		return ServerResponse.createSuccess(user);
+		return user;
 	}
 	// @Override
 	// @Deprecated

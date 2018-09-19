@@ -8,6 +8,7 @@ import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.oauth2.domain.UserDetails;
 import com.oauth2.server.business.CustomOAuthTokenRequest;
 import com.oauth2.server.business.validator.AbstractClientDetailsValidator;
 import com.oauth2.util.WebUtils;
@@ -18,13 +19,14 @@ public abstract class AbstractOAuthTokenHandler extends OAuthHandler implements 
 
 	protected CustomOAuthTokenRequest tokenRequest;
 	protected HttpServletResponse response;
+	protected UserDetails user;
 
 	@Override
-	public final void handle(CustomOAuthTokenRequest tokenRequest, HttpServletResponse response)
+	public final void handle(CustomOAuthTokenRequest tokenRequest, HttpServletResponse response, UserDetails user)
 			throws OAuthProblemException, OAuthSystemException {
 		this.tokenRequest = tokenRequest;
 		this.response = response;
-
+		this.user = user;
 		// validate
 		if (validateFailed()) {
 			return;

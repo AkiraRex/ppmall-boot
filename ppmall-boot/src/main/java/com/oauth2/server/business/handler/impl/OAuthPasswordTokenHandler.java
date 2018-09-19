@@ -14,42 +14,42 @@ import com.oauth2.server.business.validator.AbstractClientDetailsValidator;
 import com.oauth2.server.business.validator.PasswordClientDetailsValidator;
 import com.oauth2.util.WebUtils;
 
+public class OAuthPasswordTokenHandler extends AbstractOAuthTokenHandler {
 
-public class OAuthPasswordTokenHandler extends AbstractOAuthTokenHandler{
+	private static final Logger LOG = LoggerFactory.getLogger(OAuthPasswordTokenHandler.class);
 
-	  private static final Logger LOG = LoggerFactory.getLogger(OAuthPasswordTokenHandler.class);
+	@Override
+	public boolean support(CustomOAuthTokenRequest tokenRequest) throws OAuthProblemException {
+		final String grantType = tokenRequest.getGrantType();
+		return GrantType.PASSWORD.toString().equalsIgnoreCase(grantType);
+	}
 
+	@Override
+	protected AbstractClientDetailsValidator getValidator() {
+		return new PasswordClientDetailsValidator(tokenRequest);
+	}
 
-	    @Override
-	    public boolean support(CustomOAuthTokenRequest tokenRequest) throws OAuthProblemException {
-	        final String grantType = tokenRequest.getGrantType();
-	        return GrantType.PASSWORD.toString().equalsIgnoreCase(grantType);
-	    }
+	/**
+	 * /oauth/token?client_id=mobile-client&client_secret=mobile&grant_type=
+	 * password&scope=read,write&username=mobile&password=mobile
+	 * <p/>
+	 * Response access_token If exist AccessToken and it is not expired, return
+	 * it otherwise, return a new AccessToken(include refresh_token)
+	 * <p/>
+	 * {"token_type":"Bearer","expires_in":33090,"refresh_token":
+	 * "976aeaf7df1ee998f98f15acd1de63ea","access_token":
+	 * "7811aff100eb7dadec132f45f1c01727"}
+	 */
+	@Override
+	public void handleAfterValidation() throws OAuthProblemException, OAuthSystemException {
 
-	    @Override
-	    protected AbstractClientDetailsValidator getValidator() {
-	        return new PasswordClientDetailsValidator(tokenRequest);
-	    }
+		AccessToken accessToken = iOAuthService.retrievePasswordAccessToken(clientDetails(), tokenRequest.getScopes(),
+				tokenRequest.getUsername(), user);
+		final OAuthResponse tokenResponse = createTokenResponse(accessToken, false);
 
-	    /**
-	     * /oauth/token?client_id=mobile-client&client_secret=mobile&grant_type=password&scope=read,write&username=mobile&password=mobile
-	     * <p/>
-	     * Response access_token
-	     * If exist AccessToken and it is not expired, return it
-	     * otherwise, return a new AccessToken(include refresh_token)
-	     * <p/>
-	     * {"token_type":"Bearer","expires_in":33090,"refresh_token":"976aeaf7df1ee998f98f15acd1de63ea","access_token":"7811aff100eb7dadec132f45f1c01727"}
-	     */
-	    @Override
-	    public void handleAfterValidation() throws OAuthProblemException, OAuthSystemException {
+		LOG.debug("'password' response: {}", tokenResponse);
+		WebUtils.writeOAuthJsonResponse(response, tokenResponse);
 
-	        AccessToken accessToken = iOAuthService.retrievePasswordAccessToken(clientDetails(),
-	                tokenRequest.getScopes(), tokenRequest.getUsername());
-	        final OAuthResponse tokenResponse = createTokenResponse(accessToken, false);
-
-	        LOG.debug("'password' response: {}", tokenResponse);
-	        WebUtils.writeOAuthJsonResponse(response, tokenResponse);
-
-	    }
+	}
 
 }

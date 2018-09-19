@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.oauth2.domain.AccessToken;
 import com.oauth2.domain.ClientDetails;
+import com.oauth2.domain.UserDetails;
 import com.oauth2.server.business.retriever.handler.AbstractAccessTokenHandler;
 
 
@@ -21,9 +22,11 @@ public class PasswordAccessTokenRetriever extends AbstractAccessTokenHandler {
     private final ClientDetails clientDetails;
     private final Set<String> scopes;
     private final String username;
+   
 
-    public PasswordAccessTokenRetriever(ClientDetails clientDetails, Set<String> scopes, String username) {
-        this.clientDetails = clientDetails;
+    public PasswordAccessTokenRetriever(ClientDetails clientDetails, Set<String> scopes, String username, UserDetails user) {
+    	super(user);
+    	this.clientDetails = clientDetails;
         this.scopes = scopes;
         this.username = username;
     }
@@ -40,7 +43,7 @@ public class PasswordAccessTokenRetriever extends AbstractAccessTokenHandler {
         boolean needCreated = needCreated(clientId, accessToken);
 
         if (needCreated) {
-            accessToken = createAndSaveAccessToken(clientDetails, clientDetails.supportRefreshToken(), username, authenticationId);
+            accessToken = createAndSaveAccessToken(clientDetails, clientDetails.supportRefreshToken(), username, authenticationId, user, scope);
             LOG.info("Create a new AccessToken: {}", accessToken);
         }
 

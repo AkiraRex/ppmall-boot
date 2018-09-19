@@ -11,13 +11,16 @@ import org.springframework.stereotype.Service;
 import com.oauth2.domain.AccessToken;
 import com.oauth2.domain.ClientDetails;
 import com.oauth2.domain.OauthCode;
+import com.oauth2.domain.UserDetails;
 import com.oauth2.repository.IOAuthCacheRepository;
+import com.oauth2.server.business.handler.impl.AccessTokenByRefreshTokenChanger;
 import com.oauth2.server.business.retriever.AccessTokenRetriever;
 import com.oauth2.server.business.retriever.AuthCodeRetriever;
 import com.oauth2.server.business.retriever.AuthorizationCodeAccessTokenRetriever;
 import com.oauth2.server.business.retriever.NewAccessTokenRetriever;
 import com.oauth2.server.business.retriever.PasswordAccessTokenRetriever;
 import com.oauth2.server.business.service.IOAuthService;
+import com.oauth2.server.business.service.IUserDetailsService;
 
 @Service("iOAuthService")
 public class OAuthServiceImpl implements IOAuthService {
@@ -57,7 +60,7 @@ public class OAuthServiceImpl implements IOAuthService {
 	@Override
 	public AccessToken retrieveAccessToken(ClientDetails clientDetails, Set<String> scopes, boolean includeRefreshToken)
 			throws OAuthSystemException {
-		AccessTokenRetriever retriever = new AccessTokenRetriever(clientDetails, scopes, includeRefreshToken);
+		AccessTokenRetriever retriever = new AccessTokenRetriever(clientDetails, scopes, includeRefreshToken, null);
 		return retriever.retrieve();
 	}
 
@@ -65,7 +68,7 @@ public class OAuthServiceImpl implements IOAuthService {
 	@Override
 	public AccessToken retrieveNewAccessToken(ClientDetails clientDetails, Set<String> scopes)
 			throws OAuthSystemException {
-		NewAccessTokenRetriever tokenRetriever = new NewAccessTokenRetriever(clientDetails, scopes);
+		NewAccessTokenRetriever tokenRetriever = new NewAccessTokenRetriever(clientDetails, scopes, null);
 		return tokenRetriever.retrieve();
 	}
 
@@ -87,15 +90,16 @@ public class OAuthServiceImpl implements IOAuthService {
 	public AccessToken retrieveAuthorizationCodeAccessToken(ClientDetails clientDetails, String code)
 			throws OAuthSystemException {
 		AuthorizationCodeAccessTokenRetriever codeAccessTokenRetriever = new AuthorizationCodeAccessTokenRetriever(
-				clientDetails, code);
+				clientDetails, code, null);
 		return codeAccessTokenRetriever.retrieve();
 	}
 
 	// grant_type=password AccessToken
 	@Override
-	public AccessToken retrievePasswordAccessToken(ClientDetails clientDetails, Set<String> scopes, String username)
-			throws OAuthSystemException {
-		PasswordAccessTokenRetriever tokenRetriever = new PasswordAccessTokenRetriever(clientDetails, scopes, username);
+	public AccessToken retrievePasswordAccessToken(ClientDetails clientDetails, Set<String> scopes, String username,
+			UserDetails user) throws OAuthSystemException {
+		PasswordAccessTokenRetriever tokenRetriever = new PasswordAccessTokenRetriever(clientDetails, scopes, username,
+				user);
 		return tokenRetriever.retrieve();
 	}
 
@@ -107,10 +111,9 @@ public class OAuthServiceImpl implements IOAuthService {
 	@Override
 	public AccessToken changeAccessTokenByRefreshToken(String refreshToken, String clientId)
 			throws OAuthSystemException {
-		// AccessTokenByRefreshTokenChanger refreshTokenChanger = new
-		// AccessTokenByRefreshTokenChanger(refreshToken, clientId);
-		// return refreshTokenChanger.change();
-		return null;
+		AccessTokenByRefreshTokenChanger refreshTokenChanger = new AccessTokenByRefreshTokenChanger(refreshToken,
+				clientId, null);
+		return refreshTokenChanger.change();
 	}
 
 	// grant_type=client_credentials

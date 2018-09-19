@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.oauth2.domain.AccessToken;
@@ -18,7 +19,7 @@ import com.oauth2.repository.IOAuthRepository;
 import com.oauth2.common.CacheKeyGenerator;
 import com.oauth2.common.CacheNames;
 
-
+@Repository("iOAuthCacheRepository")
 public class OAuthRedisRepositoryImpl extends AbstractCacheSupport implements IOAuthCacheRepository {
 
 
@@ -83,7 +84,7 @@ public class OAuthRedisRepositoryImpl extends AbstractCacheSupport implements IO
 
         //add to cache
         final String key = CacheKeyGenerator.generateAccessTokenKey(accessToken);
-        final String key1 = CacheKeyGenerator.generateAccessTokenKey(accessToken);
+        final String key1 = CacheKeyGenerator.generateAccessTokenUsernameClientIdAuthIdKey(accessToken);
 
         final Cache accessTokenCache = getAccessTokenCache();
         putToCache(accessTokenCache, key, accessToken);
@@ -121,11 +122,17 @@ public class OAuthRedisRepositoryImpl extends AbstractCacheSupport implements IO
 
         //clean from cache
         final String key = CacheKeyGenerator.generateAccessTokenKey(accessToken);
-        final String key1 = CacheKeyGenerator.generateAccessTokenKey(accessToken);
+        final String key1 = CacheKeyGenerator.generateAccessTokenUsernameClientIdAuthIdKey(accessToken);
+        
+        String refreshToken = accessToken.refreshToken();
+        String clientId = accessToken.clientId();
+        final String key2 = CacheKeyGenerator.generateAccessTokenRefreshKey(refreshToken, clientId);
 
         final Cache accessTokenCache = getAccessTokenCache();
         evictFromCache(accessTokenCache, key);
         evictFromCache(accessTokenCache, key1);
+        evictFromCache(accessTokenCache, key2);
+        
         LOG.debug("Evict AccessToken[{}] from cache, key = {}, key1 = {}", accessToken, key, key1);
 
         return iOAuthRepository.deleteAccessToken(accessToken);

@@ -1,10 +1,7 @@
 package com.ppmall.service;
 
 import com.ppmall.common.ServerResponse;
-import com.ppmall.pojo.Category;
 import com.ppmall.pojo.User;
-
-import java.util.List;
 
 
 public interface IUserService {
@@ -32,6 +29,5 @@ public interface IUserService {
 
     ServerResponse checkAdmin(User user);
 
-    ServerResponse loadUserByUsername(String username);
 
 }

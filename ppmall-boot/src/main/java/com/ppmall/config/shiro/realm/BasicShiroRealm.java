@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.oauth2.server.business.service.IUserDetailsService;
 import com.ppmall.common.Const;
 import com.ppmall.common.ServerResponse;
 import com.ppmall.pojo.User;
@@ -29,7 +30,7 @@ public class BasicShiroRealm extends AuthorizingRealm {
 	private static final Logger logger = LoggerFactory.getLogger(BasicShiroRealm.class);
 
 	@Autowired
-	private IUserService iUserService;
+	private IUserDetailsService iUserDetailsService;
 
 	public BasicShiroRealm() {
 	        super();
@@ -51,8 +52,7 @@ public class BasicShiroRealm extends AuthorizingRealm {
 		}
 
 		@SuppressWarnings("unchecked")
-		ServerResponse<User> serverResponse = iUserService.loadUserByUsername(username);
-		User user = (User) serverResponse.getData();
+		User user = (User)iUserDetailsService.loadUserByUsername(username);
 		logger.debug("Load Users[{}] by username: {}", user, username);
 
 		AuthenticationInfo info = null;
@@ -74,7 +74,7 @@ public class BasicShiroRealm extends AuthorizingRealm {
 		Object principal = principals.getPrimaryPrincipal();
 		
 		if (!(principal instanceof User)) {
-			principal = iUserService.loadUserByUsername(principal.toString()).getData();
+			principal = iUserDetailsService.loadUserByUsername(principal.toString());
 		}
 		
 		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();

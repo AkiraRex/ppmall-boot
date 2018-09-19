@@ -17,6 +17,7 @@ import com.oauth2.util.WebUtils;
 @Controller
 @RequestMapping("/oauth")
 public class OAuth2TokenController {
+	
 	/**
      * Handle grant_types as follows:
      * <p/>
@@ -35,6 +36,7 @@ public class OAuth2TokenController {
 		try {
 			CustomOAuthTokenRequest tokenRequest = new CustomOAuthTokenRequest(request);
 
+			
 			OAuthTokenHandlerDispatcher tokenHandleDispatcher = new OAuthTokenHandlerDispatcher(tokenRequest, response);
 			tokenHandleDispatcher.dispatch();
 

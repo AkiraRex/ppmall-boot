@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import com.oauth2.domain.AccessToken;
 import com.oauth2.domain.ClientDetails;
 import com.oauth2.domain.OauthCode;
+import com.oauth2.domain.UserDetails;
 import com.oauth2.server.business.retriever.handler.AbstractAccessTokenHandler;
 
 public class AuthorizationCodeAccessTokenRetriever extends AbstractAccessTokenHandler {
@@ -16,7 +17,8 @@ public class AuthorizationCodeAccessTokenRetriever extends AbstractAccessTokenHa
 	private ClientDetails clientDetails;
 	private String code;
 
-	public AuthorizationCodeAccessTokenRetriever(ClientDetails clientDetails, String code) {
+	public AuthorizationCodeAccessTokenRetriever(ClientDetails clientDetails, String code, UserDetails user) {
+		super(user);
 		this.clientDetails = clientDetails;
 		this.code = code;
 	}
@@ -36,7 +38,7 @@ public class AuthorizationCodeAccessTokenRetriever extends AbstractAccessTokenHa
 			iOAuthCacheRepository.deleteAccessToken(accessToken);
 		}
 		accessToken = createAndSaveAccessToken(clientDetails, clientDetails.supportRefreshToken(), username,
-				authenticationId);
+				authenticationId, user, null);
 		LOG.debug("Create a new AccessToken: {}", accessToken);
 
 		return accessToken;

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.oauth2.domain.AccessToken;
 import com.oauth2.domain.ClientDetails;
+import com.oauth2.domain.UserDetails;
 import com.oauth2.server.business.retriever.handler.AbstractAccessTokenHandler;
 public class AccessTokenRetriever extends AbstractAccessTokenHandler {
 
@@ -18,10 +19,12 @@ public class AccessTokenRetriever extends AbstractAccessTokenHandler {
     private final Set<String> scopes;
     private final boolean includeRefreshToken;
 
-    public AccessTokenRetriever(ClientDetails clientDetails, Set<String> scopes, boolean includeRefreshToken) {
-        this.clientDetails = clientDetails;
+    public AccessTokenRetriever(ClientDetails clientDetails, Set<String> scopes, boolean includeRefreshToken, UserDetails user) {
+    	super(user);
+    	this.clientDetails = clientDetails;
         this.scopes = scopes;
         this.includeRefreshToken = includeRefreshToken;
+       
     }
 
     public AccessToken retrieve() throws OAuthSystemException {
@@ -34,7 +37,7 @@ public class AccessTokenRetriever extends AbstractAccessTokenHandler {
 
         AccessToken accessToken = iOAuthCacheRepository.findAccessToken(clientId, username, authenticationId);
         if (accessToken == null) {
-            accessToken = createAndSaveAccessToken(clientDetails, includeRefreshToken, username, authenticationId);
+            accessToken = createAndSaveAccessToken(clientDetails, includeRefreshToken, username, authenticationId, user, scope);
             LOG.debug("Create a new AccessToken: {}", accessToken);
         }
 

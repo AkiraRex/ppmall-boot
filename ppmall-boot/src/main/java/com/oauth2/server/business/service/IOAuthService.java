@@ -7,6 +7,7 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import com.oauth2.domain.AccessToken;
 import com.oauth2.domain.ClientDetails;
 import com.oauth2.domain.OauthCode;
+import com.oauth2.domain.UserDetails;
 
 public interface IOAuthService {
 	ClientDetails loadClientDetails(String clientId);
@@ -30,7 +31,7 @@ public interface IOAuthService {
 																								// OAuthSystemException;
 
 	// grant_type=password AccessToken
-	AccessToken retrievePasswordAccessToken(ClientDetails clientDetails, Set<String> scopes, String username) throws OAuthSystemException;// throws
+	AccessToken retrievePasswordAccessToken(ClientDetails clientDetails, Set<String> scopes, String username, UserDetails user) throws OAuthSystemException;// throws
 																												// OAuthSystemException;
 
 	// grant_type=client_credentials

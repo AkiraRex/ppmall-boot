@@ -28,6 +28,7 @@ import com.ppmall.common.Const;
 import com.ppmall.pojo.User;
 import com.ppmall.service.IUserService;
 
+@Deprecated
 public class CustomShiroRealm extends AuthorizingRealm {
 	private static final Logger logger = LoggerFactory.getLogger(CustomShiroRealm.class);
 

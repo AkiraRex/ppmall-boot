@@ -2,7 +2,7 @@ package com.oauth2.domain;
 
 import java.util.Date;
 
-public class AccessToken<T> extends AbstractDomain {
+public class AccessToken extends AbstractDomain {
 	private static final long serialVersionUID = -3065517831372557033L;
 	public static final String BEARER_TYPE = "Bearer";
 
@@ -21,7 +21,9 @@ public class AccessToken<T> extends AbstractDomain {
 
 	private String username;
 	
-	private T userObject;
+	private UserDetails userObject;
+	
+	private String scope;
 	
 	private String clientId;
 
@@ -90,12 +92,21 @@ public class AccessToken<T> extends AbstractDomain {
 		return this;
 	}
 	
-	public T userObject(){
+	public UserDetails userObject(){
 		return userObject;
 	}
 	
-	public AccessToken userObject(T object){
+	public AccessToken userObject(UserDetails object){
 		this.userObject = object;
+		return this;
+	}
+	
+	public String scope() {
+		return scope;
+	}
+
+	public AccessToken scope(String scope) {
+		this.scope = scope;
 		return this;
 	}
 

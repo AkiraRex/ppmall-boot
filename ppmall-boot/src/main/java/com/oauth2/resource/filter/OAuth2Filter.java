@@ -22,8 +22,10 @@ import org.springframework.util.Assert;
 
 import com.oauth2.domain.AccessToken;
 import com.oauth2.domain.OAuth2Token;
+import com.oauth2.domain.UserDetails;
 import com.oauth2.resource.service.IOAuthRSService;
 import com.oauth2.util.WebUtils;
+import com.ppmall.common.Const;
 
 @Component
 public class OAuth2Filter extends AuthenticatingFilter {
@@ -53,6 +55,9 @@ public class OAuth2Filter extends AuthenticatingFilter {
         String username = null;
         if (token != null) {
             username = token.username();
+            // put the user to session 
+            UserDetails user = token.userObject();
+            httpRequest.getSession().setAttribute(Const.CURRENT_USER, user);
             logger.debug("Set username[{}] and clientId[{}] to request that from AccessToken: {}", username, token.clientId(), token);
             httpRequest.setAttribute(OAuth.OAUTH_CLIENT_ID, token.clientId());
         } else {

@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.oauth2.domain.AccessToken;
 import com.oauth2.domain.ClientDetails;
+import com.oauth2.domain.UserDetails;
 import com.oauth2.server.business.service.IOAuthService;
 import com.oauth2.util.BeanUtil;
 

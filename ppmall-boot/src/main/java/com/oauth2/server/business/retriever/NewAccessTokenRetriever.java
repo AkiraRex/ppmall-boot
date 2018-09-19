@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.oauth2.domain.AccessToken;
 import com.oauth2.domain.ClientDetails;
+import com.oauth2.domain.UserDetails;
 import com.oauth2.server.business.retriever.handler.AbstractAccessTokenHandler;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.utils.OAuthUtils;
@@ -18,7 +19,8 @@ public class NewAccessTokenRetriever extends AbstractAccessTokenHandler {
 	private final ClientDetails clientDetails;
 	private final Set<String> scopes;
 
-	public NewAccessTokenRetriever(ClientDetails clientDetails, Set<String> scopes) {
+	public NewAccessTokenRetriever(ClientDetails clientDetails, Set<String> scopes, UserDetails user) {
+		super(user);
 		this.clientDetails = clientDetails;
 		this.scopes = scopes;
 	}
@@ -37,7 +39,7 @@ public class NewAccessTokenRetriever extends AbstractAccessTokenHandler {
 			LOG.debug("Delete existed AccessToken: {}", accessToken);
 			iOAuthCacheRepository.deleteAccessToken(accessToken);
 		}
-		accessToken = createAndSaveAccessToken(clientDetails, false, username, authenticationId);
+		accessToken = createAndSaveAccessToken(clientDetails, false, username, authenticationId, user, scopeAsText);
 		LOG.debug("Create a new AccessToken: {}", accessToken);
 
 		return accessToken;
