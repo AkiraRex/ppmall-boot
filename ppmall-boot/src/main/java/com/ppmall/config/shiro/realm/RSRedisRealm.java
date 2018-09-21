@@ -35,7 +35,7 @@ public class RSRedisRealm extends BasicShiroRealm {
     @Override
     public AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
 
-    	System.out.println("2222222222222222222222222222222" + token.getClass());
+    	logger.info("type of token is {}", token.getClass().toString());
     	
         OAuth2Token upToken = (OAuth2Token) token;
         final String accessToken = (String) upToken.getCredentials();
@@ -84,15 +84,4 @@ public class RSRedisRealm extends BasicShiroRealm {
             throw new OAuth2AuthenticationException("Invalid client by token: " + token);
         }
     }
-
-
-//    public void setRsService(IOAuthRSService iOAuthRSService) {
-//        this.iOAuthRSService = iOAuthRSService;
-//    }
-
-//    @Override
-//    public void afterPropertiesSet() throws Exception {
-//        super.afterPropertiesSet();
-//        Assert.notNull(this.iOAuthRSService, "rsService is null");
-//    }
 }

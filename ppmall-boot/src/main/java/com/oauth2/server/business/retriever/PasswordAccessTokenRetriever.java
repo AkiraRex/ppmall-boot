@@ -38,14 +38,19 @@ public class PasswordAccessTokenRetriever extends AbstractAccessTokenHandler {
         final String clientId = clientDetails.clientId();
 
         final String authenticationId = iAuthenticationIdGenerator.generate(clientId, username, scope);
-        AccessToken accessToken = iOAuthCacheRepository.findAccessToken(clientId, username, authenticationId);
+//        AccessToken accessToken = iOAuthCacheRepository.findAccessToken(clientId, username, authenticationId);
 
-        boolean needCreated = needCreated(clientId, accessToken);
-
-        if (needCreated) {
-            accessToken = createAndSaveAccessToken(clientDetails, clientDetails.supportRefreshToken(), username, authenticationId, user, scope);
-            LOG.info("Create a new AccessToken: {}", accessToken);
-        }
+//        boolean needCreated = needCreated(clientId, accessToken);
+//        
+//        needCreated = true;
+//
+//        if (needCreated) {
+//            accessToken = createAndSaveAccessToken(clientDetails, clientDetails.supportRefreshToken(), username, authenticationId, user, scope);
+//            LOG.info("Create a new AccessToken: {}", accessToken);
+//        }
+        
+        AccessToken accessToken = createAndSaveAccessToken(clientDetails, clientDetails.supportRefreshToken(), username, authenticationId, user, scope);
+        LOG.info("Create a new AccessToken: {}", accessToken);
 
         return accessToken;
     }

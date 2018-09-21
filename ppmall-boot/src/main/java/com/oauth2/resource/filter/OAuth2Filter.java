@@ -110,7 +110,6 @@ public class OAuth2Filter extends AuthenticatingFilter {
                     .setError(OAuthError.ResourceResponse.INVALID_TOKEN)
                     .setErrorDescription(ae.getMessage())
                     .buildJSONMessage();
-
             WebUtils.writeOAuthJsonResponse((HttpServletResponse) response, oAuthResponse);
 
         } catch (OAuthSystemException e) {

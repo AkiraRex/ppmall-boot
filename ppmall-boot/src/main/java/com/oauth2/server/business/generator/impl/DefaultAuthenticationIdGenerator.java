@@ -47,5 +47,10 @@ public class DefaultAuthenticationIdGenerator implements IAuthenticationIdGenera
 			throw new IllegalStateException("UTF-8 encoding not available.  Fatal (should be in the JDK).");
 		}
 	}
+	
+	public static void main(String[] args) {
+		DefaultAuthenticationIdGenerator defaultAuthenticationIdGenerator = new DefaultAuthenticationIdGenerator();
+		System.out.println(defaultAuthenticationIdGenerator.generate("77ace8df917", "qqqq", "read"));
+	}
 
 }

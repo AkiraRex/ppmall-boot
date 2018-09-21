@@ -6,18 +6,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
+import com.oauth2.common.CacheKeyGenerator;
+import com.oauth2.common.CacheNames;
 import com.oauth2.domain.AccessToken;
 import com.oauth2.domain.ClientDetails;
 import com.oauth2.domain.OauthCode;
 import com.oauth2.repository.AbstractCacheSupport;
 import com.oauth2.repository.IOAuthCacheRepository;
 import com.oauth2.repository.IOAuthRepository;
-import com.oauth2.common.CacheKeyGenerator;
-import com.oauth2.common.CacheNames;
 
 @Repository("iOAuthCacheRepository")
 public class OAuthRedisRepositoryImpl extends AbstractCacheSupport implements IOAuthCacheRepository {
@@ -120,12 +118,26 @@ public class OAuthRedisRepositoryImpl extends AbstractCacheSupport implements IO
     @Override
     public int deleteAccessToken(AccessToken accessToken) {
 
+    	AccessToken oldAccessToken = findAccessToken(accessToken.clientId(), accessToken.username(), accessToken.authenticationId());
+    	
         //clean from cache
-        final String key = CacheKeyGenerator.generateAccessTokenKey(accessToken);
-        final String key1 = CacheKeyGenerator.generateAccessTokenUsernameClientIdAuthIdKey(accessToken);
+		final String key;
+		final String key1;
+		String refreshToken;
+		String clientId;
+		if (oldAccessToken != null) {
+			key = CacheKeyGenerator.generateAccessTokenKey(oldAccessToken);
+			key1 = CacheKeyGenerator.generateAccessTokenUsernameClientIdAuthIdKey(oldAccessToken);
+			refreshToken = oldAccessToken.refreshToken();
+			clientId = oldAccessToken.clientId();
+		} else {
+			key = CacheKeyGenerator.generateAccessTokenKey(accessToken);
+			key1 = CacheKeyGenerator.generateAccessTokenUsernameClientIdAuthIdKey(accessToken);
+			refreshToken = accessToken.refreshToken();
+			clientId = accessToken.clientId();
+		}
         
-        String refreshToken = accessToken.refreshToken();
-        String clientId = accessToken.clientId();
+       
         final String key2 = CacheKeyGenerator.generateAccessTokenRefreshKey(refreshToken, clientId);
 
         final Cache accessTokenCache = getAccessTokenCache();

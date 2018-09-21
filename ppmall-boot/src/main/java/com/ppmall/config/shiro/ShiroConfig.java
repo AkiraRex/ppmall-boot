@@ -103,8 +103,8 @@ public class ShiroConfig {
 		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
 		// 设置realm.
 		List<Realm> realms = new ArrayList<>();
-		realms.add(rSRedisRealm());
 		realms.add(basicShiroRealm());
+		realms.add(rSRedisRealm());
 		securityManager.setRealms(realms);
 		securityManager.setSubjectFactory(subjectFactory());
 		securityManager.setCacheManager(shiroCacheManager());

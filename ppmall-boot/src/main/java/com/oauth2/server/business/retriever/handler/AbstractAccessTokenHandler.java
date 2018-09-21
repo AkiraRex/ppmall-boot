@@ -37,6 +37,8 @@ public abstract class AbstractAccessTokenHandler extends AbstractOAuthHolder {
             accessToken.refreshToken(oAuthIssuer.refreshToken());
         }
 
+        // Evict cache every login
+        this.iOAuthCacheRepository.deleteAccessToken(accessToken);
         this.iOAuthCacheRepository.saveAccessToken(accessToken);
         LOG.debug("Save AccessToken: {}", accessToken);
         return accessToken;
